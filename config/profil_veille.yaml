@@ -214,6 +214,14 @@ scoring:
 # ---------------------------------------------------------------------
 dedoublonnage:
   seuil_similarite: 0.85        # similarité cosinus TF-IDF au-delà = même travail
+  # Les entrées de classement suivent toutes le même gabarit de texte : les comparer
+  # par similarité les fusionnerait à tort (mesuré : 10 fausses paires à 0.85).
+  # Elles restent dédoublonnées par URL.
+  familles_sans_similarite: [benchmark]
+  longueur_min_texte: 100       # textes plus courts : pas de comparaison de similarité
+  longueur_min_titre_inclus: 30 # règle "titre inclus" (publications seulement)
+  # À date égale, quel document est considéré comme l'original
+  priorite_original: [publication, independant, benchmark, depot, fournisseur]
 
 # ---------------------------------------------------------------------
 # 7. Niveau de preuve (étape 6)

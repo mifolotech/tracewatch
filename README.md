@@ -74,7 +74,8 @@ tracewatch/
 │   │   ├── github.py
 │   │   ├── rss.py
 │   │   └── benchmarks.py
-│   ├── normalisation/         # étape 4
+│   ├── normalisation/         # étape 4 : python -m tracewatch.normalisation
+│   │   ├── __main__.py        # lance l'étape + bilan des doublons
 │   │   ├── schema.py          # format unique de document
 │   │   ├── dedup.py           # doublons (URL, DOI, similarité)
 │   │   └── clusters.py        # travail original vs republications
@@ -161,10 +162,11 @@ tracewatch/
 - **Fini quand :** la base contient des documents réels d'au moins 4 familles.
 
 ### Étape 4. Normalisation et dédoublonnage (test 1)
-- [ ] Schéma unique de document
-- [ ] Détection des doublons : URL canonique, DOI/arXiv ID, similarité de texte
-- [ ] Clusters « travail original » vs « republications » (5 articles sur la même étude = 1 preuve)
-- **Fini quand :** le test 1 passe.
+- [x] Schéma unique de document (URL canonique, DOI, arXiv ID, empreinte du contenu)
+- [x] Détection des doublons : URL canonique, DOI/arXiv ID, empreinte, similarité de texte (TF-IDF ≥ 0.85), titre inclus
+- [x] Clusters « travail original » vs « republications » (5 articles sur la même étude = 1 preuve)
+- Lancer : `python -m tracewatch.normalisation` (relançable, reconstruit les clusters)
+- **Fini quand :** le test 1 passe. ✅ `pytest tests/test_s1_doublons.py` : 9/9. Sur la vraie base : 1 337 documents → 1 288 travaux distincts (48 groupes de doublons, tous vérifiés à la main).
 
 ### Étape 5. Qualification (tests 2 et 4)
 - [ ] Trois scores séparés : pertinence, fraîcheur, fiabilité/type de source
