@@ -299,6 +299,8 @@ git push origin v1.0
 
 **Prérequis :** Python 3.11 ou plus récent ([python.org](https://www.python.org/downloads/)), Git. Aucune clé n'est nécessaire pour la démo.
 
+> **Windows :** cloner dans un dossier au chemin court (ex. `C:\dev\tracewatch`). Dans un dossier profond, `pip install` peut échouer avec « No such file or directory », car Windows limite les chemins à 260 caractères (Streamlit contient des fichiers aux noms longs). Autre solution : [activer les chemins longs](https://pip.pypa.io/warnings/enable-long-paths).
+
 ### 8.1 Installer (une seule fois)
 
 Windows (PowerShell) :
