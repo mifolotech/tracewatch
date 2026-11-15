@@ -66,7 +66,9 @@ tracewatch/
 │
 ├── src/tracewatch/
 │   ├── db.py                  # schéma SQLite
-│   ├── collecte/              # étape 3
+│   ├── collecte/              # étape 3 : python -m tracewatch.collecte
+│   │   ├── __main__.py        # lance toutes les sources + bilan par famille
+│   │   ├── commun.py          # profil, HTTP poli, dates, enregistrement
 │   │   ├── arxiv.py
 │   │   ├── openalex.py
 │   │   ├── github.py
@@ -149,11 +151,13 @@ tracewatch/
 - **Fini quand :** `pip install -r requirements.txt` fonctionne et la base se crée (`python -m tracewatch.db`). ✅ Vérifié.
 
 ### Étape 3. Collecte multi-sources (au moins 4 familles)
-- [ ] arXiv et OpenAlex (publications)
-- [ ] Benchmarks (SWE-bench, WebArena : leaderboards, dépôts)
-- [ ] GitHub (projets d'agents, issues sur les échecs)
-- [ ] Flux RSS (blogs fournisseurs et sources critiques)
-- [ ] Chaque document garde URL, date, type de source, auteur/organisation, date de collecte
+- [x] arXiv et OpenAlex (publications)
+- [x] Benchmarks (SWE-bench Verified + Lite, WebArena : leaderboards, avec mention vérifié / auto-déclaré)
+- [x] GitHub (projets d'agents, issues sur les échecs)
+- [x] Flux RSS (3 fournisseurs, 7 sources indépendantes, filtrés par mots-clés)
+- [x] Chaque document garde URL, date, type de source, auteur/organisation, date de collecte
+- Lancer : `python -m tracewatch.collecte` (ou `--sources arxiv rss` pour certaines sources). Relancer n'ajoute pas de doublon d'URL.
+- ✅ Vérifié le 2026-11-15 : 1 337 documents réels, 5 familles (publication 397, benchmark 314, fournisseur 284, depot 180, independant 162).
 - **Fini quand :** la base contient des documents réels d'au moins 4 familles.
 
 ### Étape 4. Normalisation et dédoublonnage (test 1)

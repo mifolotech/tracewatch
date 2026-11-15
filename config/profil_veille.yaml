@@ -116,12 +116,17 @@ sources:
       - "SWE-bench/SWE-bench"
       - "web-arena-x/webarena"
       - "SWE-agent/SWE-agent"
-      - "All-Hands-AI/OpenHands"
-    # Issues qui documentent des échecs réels (SQ2, SQ4)
+      - "OpenHands/OpenHands"           # ex All-Hands-AI/OpenHands (renommé)
+    # Issues qui documentent des échecs réels (SQ2, SQ4).
+    # Recherche limitée aux dépôts ci-dessus, mots non entourés de guillemets = tous présents.
     recherche_issues:
-      - "agent wrong patch"
-      - "agent deleted files"
-      - "benchmark evaluation bug"
+      - "wrong patch"
+      - "deleted files"
+      - "infinite loop"
+      - "hallucinated"
+      - "cannot reproduce results"
+      - "evaluation bug"
+      - "prompt injection"
     max_issues_par_requete: 30
 
   benchmarks:
@@ -129,25 +134,52 @@ sources:
     leaderboards:
       - nom: "SWE-bench"
         url: "https://www.swebench.com/"
+        # Classements disponibles : Verified, Lite, Test, Multilingual, Multimodal
+        classements: ["Verified", "Lite"]
       - nom: "WebArena"
-        url: "https://webarena.dev/"
+        url: "https://docs.google.com/spreadsheets/d/1M801lEpBbKSNwP-vDBkC_pF7LdyGU1f_ufZb_NWNBZQ"
+        url_csv: "https://docs.google.com/spreadsheets/d/1M801lEpBbKSNwP-vDBkC_pF7LdyGU1f_ufZb_NWNBZQ/export?format=csv"
 
   rss:
+    # Les blogs parlent de tout : un article n'est gardé que s'il contient
+    # un mot-clé principal ou secondaire, ou un mot de filtre_rss.
+    filtre_rss: ["agent", "agentic", "Codex", "Copilot", "benchmark"]
     # Chaque flux a sa propre famille : c'est ce qui permet de comparer
-    # fournisseurs et sources indépendantes (SQ5, scénario 3)
+    # fournisseurs et sources indépendantes (SQ5, scénario 3).
+    # Tous vérifiés le 2026-11-15. Anthropic n'a pas de flux RSS public.
     flux:
+      # --- Fournisseurs (intérêt commercial) ---
       - nom: "OpenAI News"
         url: "https://openai.com/news/rss.xml"
         source_family: fournisseur
-        a_verifier: true
       - nom: "GitHub Blog"
         url: "https://github.blog/feed/"
         source_family: fournisseur
-        a_verifier: true
+      - nom: "Google DeepMind Blog"
+        url: "https://deepmind.google/blog/rss.xml"
+        source_family: fournisseur
+      # --- Indépendants : évaluateurs, chercheurs critiques, presse ---
+      - nom: "METR"                     # laboratoire d'évaluation indépendant
+        url: "https://metr.org/feed.xml"
+        source_family: independant
+      - nom: "AI as Normal Technology"  # ex AI Snake Oil (Narayanan, Kapoor, Princeton)
+        url: "https://www.normaltech.ai/feed"
+        source_family: independant
       - nom: "Simon Willison"
         url: "https://simonwillison.net/atom/everything/"
         source_family: independant
-        a_verifier: true
+      - nom: "Gary Marcus"              # critique des LLM
+        url: "https://garymarcus.substack.com/feed"
+        source_family: independant
+      - nom: "Interconnects"            # Nathan Lambert, chercheur
+        url: "https://www.interconnects.ai/feed"
+        source_family: independant
+      - nom: "Ars Technica AI"          # presse tech
+        url: "https://arstechnica.com/ai/feed/"
+        source_family: independant
+      - nom: "The Register AI"          # presse tech
+        url: "https://www.theregister.com/software/ai_ml/headlines.atom"
+        source_family: independant
 
 # ---------------------------------------------------------------------
 # 5. Scoring (étape 5)
