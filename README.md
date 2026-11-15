@@ -138,7 +138,7 @@ tracewatch/
 - [x] Stack, flux de données, contrat de données, module IA anti-hallucination
 - [x] Faire valider `ARCHITECTURE.md` par l'équipe
 - [x] Choisir le fournisseur LLM : **Gemini**
-- [ ] Créer **une seule clé** Gemini, gardée par un seul membre
+- [x] Créer **une seule clé** Gemini, gardée par un seul membre
 
 ### Étape 2. Profil de veille + squelette du projet
 - [x] Créer l'arborescence ci-dessus
