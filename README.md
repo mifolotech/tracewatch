@@ -93,7 +93,7 @@ tracewatch/
 │   │   ├── contradictions.py  # fournisseur vs indépendant
 │   │   └── niveau_preuve.py
 │   ├── rapport/               # étapes 7 et 8
-│   │   ├── tracabilite.py     # phrase -> preuve -> source
+│   │   ├── tracabilite.py     # phrase -> preuve [Pn] -> document -> original
 │   │   ├── generateur.py
 │   │   └── revision.py        # nouvelles preuves, historique
 │   └── app/
@@ -188,8 +188,11 @@ tracewatch/
 - ⚠ Quota gratuit Gemini : **20 appels par jour et par modèle**. Analyse réelle en cours : 19 documents sur 63 sélectionnés (48 affirmations, 100 % vérifiées).
 
 ### Étape 7. Traçabilité (test 5)
-- [ ] Chaque phrase du rapport pointe vers un identifiant de preuve, puis vers le document original
-- **Fini quand :** le test 5 passe et on retrouve la source d'une conclusion en un clic.
+- [x] Chaque phrase du rapport pointe vers un identifiant de preuve, puis vers le document original
+- [x] Conclusions reliées à leurs preuves (refus des preuves non vérifiées, niveau de preuve calculé, version 1 historisée)
+- [x] Contrôle automatique du rapport : chaque phrase a une référence [Pn] vérifiée et présente dans l'annexe
+- Retrouver une source : clic sur [Pn] dans le rapport, ou `python -m tracewatch.rapport.tracabilite P12` (ou `C3`)
+- **Fini quand :** le test 5 passe et on retrouve la source d'une conclusion en un clic. ✅ 7/7.
 
 ### Étape 8. Rapport + tableau de bord
 - [ ] Rapport généré : question, décision recommandée proportionnée au niveau de preuve, faits, contradictions, incertitudes, risques, points à surveiller
