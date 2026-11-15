@@ -46,19 +46,33 @@ PAR_FAMILLE_BRUIT = 5
 CLUSTERS_EN_PLUS = 5
 
 
-def _modele(profil: dict) -> str:
-    return f"{profil['analyse'].get('fournisseur', 'gemini')}/{profil['analyse']['modele']}"
+def _modeles(profil: dict) -> list[str]:
+    """Modèle principal puis modèles de secours, au format du cache (fournisseur/modèle)."""
+    conf = profil["analyse"]
+    four = conf.get("fournisseur", "gemini")
+    return [f"{four}/{m}" for m in [conf["modele"], *conf.get("modeles_secours", [])]]
+
+
+def _reponse_en_cache(clients: list[ClientLLM], prompt: str):
+    """Premier fichier de cache existant pour ce prompt, quel que soit le modèle."""
+    for c in clients:
+        chemin = c._chemin(prompt)
+        if chemin.exists():
+            return c, chemin
+    return None, None
 
 
 def exporter(conn: sqlite3.Connection, profil: dict) -> dict:
     """Fige un échantillon de la base réelle et les réponses LLM correspondantes."""
-    client = ClientLLM(None, _modele(profil), CACHE_DEFAUT)
+    clients = [ClientLLM(None, m, CACHE_DEFAUT) for m in _modeles(profil)]
     tronque = profil["analyse"]["longueur_max_document"]
     docs = {d["id"]: d for d in conn.execute(
         "SELECT d.*, s.pertinence FROM documents d LEFT JOIN scores s ON s.document_id = d.id")}
 
-    # 1. Documents dont l'analyse IA est en cache (avec ou sans affirmation)
-    analyses = {i for i, d in docs.items() if client._chemin(construire_prompt(d, profil)).exists()}
+    # 1. Documents dont l'analyse IA est en cache (avec ou sans affirmation), tous modèles confondus
+    caches = {i: _reponse_en_cache(clients, construire_prompt(d, profil)) for i, d in docs.items()}
+    caches = {i: v for i, v in caches.items() if v[1] is not None}
+    analyses = set(caches)
     choisis = set(analyses)
     # 2. Leurs doublons + quelques autres groupes de doublons (scénario 1)
     clusters = {docs[i]["cluster_id"] for i in analyses}
@@ -85,16 +99,16 @@ def exporter(conn: sqlite3.Connection, profil: dict) -> dict:
     if CACHE_DEMO.exists():
         shutil.rmtree(CACHE_DEMO)
     CACHE_DEMO.mkdir(parents=True)
-    for i in analyses:
-        src = client._chemin(construire_prompt(docs[i], profil))
+    for _, src in caches.values():
         shutil.copy2(src, CACHE_DEMO / src.name)
 
     DEMO.mkdir(parents=True, exist_ok=True)
     DOCUMENTS.write_text(json.dumps(sortie, ensure_ascii=False, indent=1), encoding="utf-8")
+    utilises = sorted({c.nom for c, _ in caches.values()}, key=_modeles(profil).index)
     manifeste = {
         "date_export": date.today().isoformat(),
         "date_reference_fraicheur": date.today().isoformat(),
-        "modele": _modele(profil),
+        "modeles": utilises,
         "documents": len(sortie),
         "documents_analyses": len(analyses),
     }
@@ -120,10 +134,13 @@ def construire(profil: dict, chemin_base=BASE_DEMO, dossier_rapports=RAPPORTS_DE
         regrouper(conn, profil)
         calculer_scores(conn, profil, reference=date.fromisoformat(manifeste["date_reference_fraicheur"]))
 
-        client = ClientLLM(None, manifeste["modele"], CACHE_DEMO)  # cache seul : pas de clé, pas de réseau
+        # Cache seul (pas de clé, pas de réseau), un client par modèle ayant servi à l'analyse
+        modeles = manifeste.get("modeles") or [manifeste["modele"]]
+        clients = [ClientLLM(None, m, CACHE_DEMO) for m in modeles]
         bilan = BilanExtraction()
         for doc in conn.execute("SELECT * FROM documents ORDER BY id").fetchall():
-            if client._chemin(construire_prompt(doc, profil)).exists():
+            client, _ = _reponse_en_cache(clients, construire_prompt(doc, profil))
+            if client is not None:
                 analyser_document(conn, client, doc, profil, bilan)
         conn.commit()
         reverifier(conn, profil["analyse"]["longueur_min_citation"])
@@ -142,7 +159,7 @@ def main(argv: list[str] | None = None) -> int:
         with get_connection(init_db()) as conn:
             m = exporter(conn, profil)
         print(f"✓ Démo figée dans {DEMO} : {m['documents']} documents, dont {m['documents_analyses']} "
-              f"avec analyse IA en cache ({m['modele']}).")
+              f"avec analyse IA en cache ({', '.join(m['modeles'])}).")
         return 0
 
     r = construire(profil)

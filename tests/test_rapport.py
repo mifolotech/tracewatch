@@ -88,3 +88,41 @@ def test_revision_quand_une_preuve_arrive(conn, tmp_path):
     assert [x["version"] for x in h] == [1, 2]
     assert h[0]["niveau_preuve"] == "moyen" and h[1]["niveau_preuve"] == "fort"  # 2 -> 3 sources
     assert "nouvelle étude" in h[1]["motif"] and "+ P7" in h[1]["motif"]
+
+
+# ---------------------------------------------------------------------
+# Règle de décision (alignée sur CADRAGE.md)
+# ---------------------------------------------------------------------
+from tracewatch.analyse.niveau_preuve import NiveauPreuve  # noqa: E402
+from tracewatch.rapport.generateur import Theme, recommander  # noqa: E402
+
+NIVEAUX = ["insuffisant", "faible", "moyen", "fort"]
+
+
+def themes(**niveaux):
+    """themes(fiabilite_securite=(0, 3)) -> (niveau optimiste, niveau critique) par thème."""
+    sortie = {}
+    for cle in ("performance_benchmark", "validite_benchmark", "usage_reel", "fiabilite_securite"):
+        o, c = niveaux.get(cle, (0, 0))
+        sortie[cle] = Theme(cle, cle, optimistes=[1] * o, critiques=[2] * c,
+                            preuve_opt=NiveauPreuve(NIVEAUX[o], o, 0, o),
+                            preuve_crit=NiveauPreuve(NIVEAUX[c], c, 0, c))
+    return sortie
+
+
+def test_exclure_si_echecs_graves_et_rien_de_prometteur():
+    d = recommander(themes(fiabilite_securite=(0, 3), usage_reel=(0, 2), performance_benchmark=(1, 0)))
+    assert d.option == "exclure"
+
+
+def test_pas_d_exclusion_quand_des_resultats_sont_prometteurs():
+    """Cas réel du 2026-11-15 : échecs fortement documentés MAIS benchmarks prometteurs -> pilote."""
+    d = recommander(themes(fiabilite_securite=(0, 3), usage_reel=(0, 3), performance_benchmark=(3, 3),
+                           validite_benchmark=(0, 3)))
+    assert d.option == "pilote_controle"
+    assert d.confiance == "forte"
+
+
+def test_generaliser_et_differer():
+    assert recommander(themes(usage_reel=(3, 0), performance_benchmark=(2, 0))).option == "generaliser"
+    assert recommander(themes(performance_benchmark=(1, 1))).option == "differer"

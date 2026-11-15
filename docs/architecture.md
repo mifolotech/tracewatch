@@ -52,7 +52,7 @@ Sept tables SQLite : `documents`, `clusters`, `scores`, `claims` (affirmations),
 | **Rapport rédigé par le code, pas par le LLM** | Chaque phrase est garantie sourcée ; un texte libre du LLM réintroduirait des affirmations non vérifiées | Synthèse rédigée par le LLM : plus fluide, mais invérifiable |
 | **Règle de décision explicite** | Discutable, reproductible, proportionnée au niveau de preuve | Laisser le LLM recommander : opaque |
 | **Cache des réponses LLM** | Démo reproductible sans clé, économie de quota | Rappeler le LLM à chaque fois : coûteux et non déterministe |
-| **Fournisseur LLM interchangeable** | Un modèle a été retiré pendant le projet (`gemini-2.5`) | Code lié à un seul modèle |
+| **Fournisseur LLM interchangeable, modèles de secours** | Un modèle a été retiré pendant le projet (`gemini-2.5`) ; le quota gratuit est par modèle, donc l'analyse bascule automatiquement | Code lié à un seul modèle |
 | **Thèmes imposés au LLM** | Permettent de rapprocher des affirmations de sources différentes pour détecter les contradictions | Thèmes libres : impossibles à comparer |
 | **Conclusions versionnées** | On voit comment la recommandation évolue avec les preuves | Écraser la conclusion : perte de l'historique |
 

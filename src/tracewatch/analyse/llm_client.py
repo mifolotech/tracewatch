@@ -125,11 +125,15 @@ class ClientLLM:
 
 def creer_client(profil: dict, dossier_cache: Path | str | None = None) -> ClientLLM:
     """Utilise le fournisseur du .env (LLM_PROVIDER) s'il a une clé, sinon le cache seul."""
+    return creer_client_modele(profil, profil["analyse"]["modele"], dossier_cache)
+
+
+def creer_client_modele(profil: dict, modele: str, dossier_cache: Path | str | None = None) -> ClientLLM:
     conf = profil["analyse"]
     nom_fournisseur = env("LLM_PROVIDER") or conf.get("fournisseur", "gemini")
-    nom_modele = f"{nom_fournisseur}/{conf['modele']}"
+    nom_modele = f"{nom_fournisseur}/{modele}"
     try:
-        fournisseur = FOURNISSEURS[nom_fournisseur](conf["modele"], conf.get("temperature", 0.0))
+        fournisseur = FOURNISSEURS[nom_fournisseur](modele, conf.get("temperature", 0.0))
     except LLMIndisponible:
         fournisseur = None  # mode démo : cache seul
     except KeyError as e:

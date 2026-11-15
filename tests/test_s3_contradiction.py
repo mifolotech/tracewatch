@@ -174,3 +174,15 @@ def test_le_cache_rend_l_analyse_reproductible(env_test):
 ])
 def test_verification_stricte(citation, attendu):
     assert verifier_citation(citation, FOURNISSEUR) is attendu
+
+
+MARKDOWN = "The agent ran `rm -rf` on the **whole workspace**, and the blog post does report the cost."
+
+
+@pytest.mark.parametrize("citation, attendu", [
+    ("The agent ran rm -rf on the whole workspace", True),  # formatage Markdown retiré : toléré
+    ("the blog post does report the cost", True),
+    ("the blog post do report the cost", False),  # cas réel : un mot changé -> rejet
+])
+def test_markdown_tolere_mais_pas_les_mots(citation, attendu):
+    assert verifier_citation(citation, MARKDOWN) is attendu

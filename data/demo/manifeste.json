@@ -1,7 +1,12 @@
 {
  "date_export": "2026-11-15",
  "date_reference_fraicheur": "2026-11-15",
- "modele": "gemini/gemini-3.5-flash",
- "documents": 125,
- "documents_analyses": 19
+ "modeles": [
+  "gemini/gemini-3.5-flash",
+  "gemini/gemini-3.8-flash",
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-3.5-flash-lite"
+ ],
+ "documents": 171,
+ "documents_analyses": 63
 }

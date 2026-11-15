@@ -9,6 +9,9 @@ Tolérances (purement typographiques, jamais sur les mots) :
   - guillemets et apostrophes typographiques (’ “ ”) vs droits (' ")
   - tirets (– —) vs trait d'union (-)
   - ponctuation ou guillemets en début/fin de citation
+  - marques Markdown * et ` (gras, code) présentes dans les issues GitHub
+Exemples réels de VRAIS rejets : « the blog post do report » (le document dit
+« does report ») ; une phrase entière absente du document.
 """
 
 from __future__ import annotations
@@ -25,6 +28,8 @@ EQUIVALENTS = str.maketrans({
 
 def normaliser(texte: str) -> str:
     texte = unicodedata.normalize("NFKC", texte or "").translate(EQUIVALENTS)
+    # Marques de mise en forme Markdown (**gras**, `code`) : l'IA les enlève en recopiant
+    texte = texte.replace("*", "").replace("`", "")
     texte = re.sub(r"\s+", " ", texte)
     # "online , exploiting" (reste du nettoyage HTML) == "online, exploiting"
     texte = re.sub(r" ([,.;:!?)\]])", r"\1", texte)

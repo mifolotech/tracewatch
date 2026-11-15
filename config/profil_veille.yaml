@@ -251,6 +251,10 @@ analyse:
   longueur_max_document: 15000   # au-delà, on tronque (coût et quota)
   longueur_min_citation: 20      # une citation trop courte ne prouve rien
   pause_entre_appels: 12         # secondes : reste sous la limite gratuite par minute (mesuré)
+  # Quota gratuit Gemini : 20 appels par jour ET PAR MODÈLE. Quand le modèle principal
+  # est épuisé, l'analyse bascule sur ces modèles (ordre = préférence). Le modèle
+  # utilisé reste tracé dans claims.modele. Testés le 2026-11-15.
+  modeles_secours: [gemini-3.8-flash, gemini-3.7-flash, gemini-3.5-flash-lite, gemini-3.1-flash-lite]
 
   # Nombre de documents analysés par famille : les plus pertinents, un par travail.
   # L'équilibre entre familles compte plus que le volume (contradictions, scénario 3).

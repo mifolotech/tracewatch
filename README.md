@@ -18,7 +18,7 @@ Projet d'examen final, Option A (cours *Veille scientifique et technologique*, L
 | 3 | Collecte multi-sources | **Fait** | `src/tracewatch/collecte/` |
 | 4 | Normalisation et dédoublonnage | **Fait** (test 1) | `src/tracewatch/normalisation/` |
 | 5 | Qualification (scores, filtres) | **Fait** (tests 2, 4) | `src/tracewatch/scoring/` |
-| 6 | Analyse contrôlée par IA | **Fait** (test 3) ; analyse réelle en cours (quota) | `src/tracewatch/analyse/` |
+| 6 | Analyse contrôlée par IA | **Fait** (test 3) | `src/tracewatch/analyse/` |
 | 7 | Traçabilité | **Fait** (test 5) | `src/tracewatch/rapport/tracabilite.py` |
 | 8 | Rapport + tableau de bord | **Fait** | `src/tracewatch/rapport/`, `app/`, `rapports/` |
 | 9 | Tests, sécurité, reproductibilité | **Fait** ; test par une personne extérieure à faire | `tests/`, `data/demo/`, section 8 |
@@ -192,7 +192,7 @@ tracewatch/
 - [x] Niveau de preuve selon le nombre de sources **indépendantes** (clusters, fournisseurs comptés à part)
 - Lancer : `python -m tracewatch.analyse` (relançable : reprend là où le quota l'a arrêtée)
 - **Fini quand :** le test 3 passe et aucune affirmation sans citation vérifiée n'entre dans le rapport. ✅ 15/15.
-- ⚠ Quota gratuit Gemini : **20 appels par jour et par modèle**. Analyse réelle en cours : 19 documents sur 63 sélectionnés (48 affirmations, 100 % vérifiées).
+- Quota gratuit Gemini : **20 appels par jour et par modèle** → bascule automatique sur des modèles de secours (`modeles_secours` du profil). Analyse réelle complète : 63 documents, 146 affirmations, 144 citations vérifiées (2 vrais rejets).
 
 ### Étape 7. Traçabilité (test 5)
 - [x] Chaque phrase du rapport pointe vers un identifiant de preuve, puis vers le document original
@@ -207,15 +207,15 @@ tracewatch/
 - [x] Révision : ajouter de nouvelles preuves, recalculer la conclusion, garder l'historique
 - Lancer : `python -m tracewatch.rapport` → `rapports/dernier_rapport.md` ; `streamlit run src/tracewatch/app/streamlit_app.py`
 - Règle de décision et plafonnement de la confiance : voir l'en-tête de `rapport/generateur.py`
-- **Fini quand :** un rapport complet est généré depuis le jeu de démo. ✅ Généré depuis la base réelle (pilote contrôlé, confiance moyenne), contrôle de traçabilité passé, `tests/test_rapport.py` 4/4. Le jeu de démo figé arrive à l'étape 9.
+- **Fini quand :** un rapport complet est généré depuis le jeu de démo. ✅ Généré depuis la base réelle et la démo (pilote contrôlé, confiance forte), contrôle de traçabilité passé, `tests/test_rapport.py` 4/4. Le jeu de démo figé arrive à l'étape 9.
 
 ### Étape 9. Tests, sécurité, reproductibilité
 - [x] Un test automatisé par scénario (les 5 ci-dessus), plus rapport, démo et sécurité
-- [x] Jeu de démo figé dans `data/demo/` : 125 documents réels + réponses LLM en cache, reconstruit sans clé ni réseau
+- [x] Jeu de démo figé dans `data/demo/` : 171 documents réels + 63 réponses LLM en cache, reconstruit sans clé ni réseau
 - [x] Vérifier qu'aucun secret n'est dans le dépôt : `tests/test_securite.py` (motifs de clés + vraies valeurs du `.env`)
 - [x] README d'installation testé sur une copie propre (clone, nouvel environnement, installation, démo, tests)
 - [ ] Une personne extérieure à l'équipe suit la section 8 sur son propre ordinateur
-- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 55/55.
+- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 61/61.
 
 ### Étape 10. Documentation et défense
 - [x] Note de 2 à 4 pages : méthode de veille, limites, risques → [`docs/note_methode.md`](docs/note_methode.md)
@@ -337,7 +337,7 @@ Le navigateur s'ouvre sur le tableau de bord : choisir **« Démo (figée) »** 
 ### 8.3 Vérifier que tout fonctionne
 
 ```bash
-pytest                             # 55 tests : les 5 scénarios, rapport, démo, sécurité, tableau de bord
+pytest                             # 61 tests : les 5 scénarios, rapport, démo, sécurité, tableau de bord
 ```
 
 ### 8.4 Chaîne complète sur des données fraîches (facultatif, clé Gemini nécessaire)
@@ -390,7 +390,7 @@ Retrouver la source d'une preuve ou d'une conclusion : `python -m tracewatch.rap
 
 ### Services IA utilisés
 
-- **Dans le produit :** Google Gemini, modèle `gemini-3.5-flash` (offre gratuite, température 0), pour l'extraction d'affirmations et de citations (étape 6). Chaque affirmation garde en base le modèle qui l'a produite (`claims.modele`), et chaque réponse est conservée dans le cache (`data/cache_llm/`, `data/demo/cache_llm/`).
+- **Dans le produit :** Google Gemini, offre gratuite, température 0 ; modèle principal `gemini-3.5-flash`, modèles de secours `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.5-flash-lite`, pour l'extraction d'affirmations et de citations (étape 6). Chaque affirmation garde en base le modèle qui l'a produite (`claims.modele`), et chaque réponse est conservée dans le cache (`data/cache_llm/`, `data/demo/cache_llm/`).
 - **Pendant le développement :** Claude (Anthropic), via Claude Code, comme assistant de programmation, pour l'écriture du code, des tests et de la documentation, sous la direction de l'équipe. *(À adapter par l'équipe selon les règles de déclaration de l'examen.)*
 
 ### Sources de données

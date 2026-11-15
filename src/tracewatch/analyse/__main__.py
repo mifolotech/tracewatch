@@ -19,7 +19,7 @@ from collections import Counter
 
 from tracewatch.analyse.contradictions import detecter
 from tracewatch.analyse.extraction import BilanExtraction, analyser_document, deja_analyse
-from tracewatch.analyse.llm_client import LLMIndisponible, QuotaDepasse, creer_client
+from tracewatch.analyse.llm_client import LLMIndisponible, QuotaDepasse, creer_client, creer_client_modele
 from tracewatch.analyse.verification import reverifier
 from tracewatch.collecte.commun import charger_profil
 from tracewatch.db import get_connection, init_db
@@ -52,8 +52,13 @@ def main(argv: list[str] | None = None) -> int:
 
     profil = charger_profil()
     client = creer_client(profil)
+    # Modèles de secours : chacun a son propre quota gratuit. Quand le quota du modèle
+    # courant est épuisé, on bascule sur le suivant (le modèle reste tracé dans claims.modele).
+    secours = list(profil["analyse"].get("modeles_secours", []))
     mode = "LLM + cache" if client.fournisseur else "CACHE SEUL (pas de clé)"
-    print(f"Modèle : {client.nom}  |  mode : {mode}  |  cache : {client.cache}")
+    print(f"Modèle : {client.nom}  |  mode : {mode}  |  cache : {client.cache}"
+          + (f"  |  secours : {', '.join(secours)}" if secours and client.fournisseur else ""))
+    appels_total, cache_total = 0, 0
 
     bilan = BilanExtraction()
     with get_connection(init_db(args.db)) as conn:
@@ -64,27 +69,49 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Documents sélectionnés : {len(docs)}  |  déjà analysés : {len(docs) - len(a_faire) if args.max is None else '…'}"
               f"  |  à analyser maintenant : {len(a_faire)}\n")
 
-        for i, doc in enumerate(a_faire, 1):
-            print(f"  [{i}/{len(a_faire)}] {doc['source_family']:<12} {doc['title'][:70]}", flush=True)
+        i, arret, erreurs_reseau = 0, False, 0
+        while i < len(a_faire) and not arret:
+            doc = a_faire[i]
+            print(f"  [{i + 1}/{len(a_faire)}] {doc['source_family']:<12} {doc['title'][:70]}", flush=True)
             avant = client.appels
             try:
                 analyser_document(conn, client, doc, profil, bilan)
                 conn.commit()
+                i += 1
             except QuotaDepasse as e:
+                appels_total += client.appels
+                cache_total += client.depuis_cache
+                if client.fournisseur and secours:
+                    suivant = secours.pop(0)
+                    print(f"    ⇄ quota de {client.nom} épuisé : bascule sur gemini/{suivant}")
+                    client = creer_client_modele(profil, suivant)
+                    continue  # on réessaie le même document avec le modèle suivant
                 print(f"\n⏸ Quota gratuit atteint : arrêt propre. Relancer plus tard, le travail fait est gardé.\n  ({e})")
-                break
+                arret = True
+                continue
             except LLMIndisponible as e:
                 print(f"    ↷ ignoré : {e}")
+                i += 1
                 continue
             except Exception as e:  # une réponse illisible ne bloque pas l'analyse
                 print(f"    ⚠ erreur sur ce document : {type(e).__name__}: {str(e)[:150]}")
+                i += 1
+                if any(m in type(e).__name__ for m in ("Connect", "Protocol", "Timeout")):
+                    erreurs_reseau += 1
+                    if erreurs_reseau >= 3:
+                        print("\n⏸ Connexion Internet perdue (3 erreurs réseau d'affilée) : arrêt propre. "
+                              "Relancer quand la connexion revient, le travail fait est gardé.")
+                        arret = True
                 continue
+            erreurs_reseau = 0
             if client.appels > avant:
                 time.sleep(profil["analyse"]["pause_entre_appels"])
 
         changes = reverifier(conn, profil["analyse"]["longueur_min_citation"])
         if changes:
             print(f"\n↻ {changes} citation(s) au statut mis à jour par les règles de vérification actuelles")
+        client.appels += appels_total
+        client.depuis_cache += cache_total
         afficher_bilan(conn, profil, bilan, client)
     return 0
 

@@ -12,8 +12,13 @@ surveiller, annexe des preuves.
 
 RÈGLE DE DÉCISION (niveaux : insuffisant 0 < faible 1 < moyen 2 < fort 3,
 comptés en sources indépendantes, voir niveau_preuve.py) :
-  1. EXCLURE      si critiques "fiabilité/sécurité" >= fort, critiques "usage réel" >= moyen
-                  et aucune preuve optimiste en usage réel
+  1. EXCLURE      si critiques "fiabilité/sécurité" >= fort, critiques "usage réel" >= moyen,
+                  aucune preuve optimiste en usage réel ET aucun résultat prometteur
+                  (optimistes benchmarks et usage réel < moyen). Aligné sur CADRAGE.md :
+                  exclure = échecs graves ET rien qui justifie même un essai encadré.
+                  (Révision du 2026-11-15 : la première version testait EXCLURE sans regarder
+                  les résultats prometteurs ; elle donnait « exclure » malgré 11 sources
+                  optimistes indépendantes sur les benchmarks. Trace : historique de C1.)
   2. GÉNÉRALISER  si optimistes "usage réel" >= fort, optimistes "benchmarks" >= moyen,
                   et critiques "usage réel" et "fiabilité/sécurité" <= faible
   3. PILOTE       si résultats prometteurs (optimistes benchmarks ou usage réel >= moyen)
@@ -137,7 +142,8 @@ def _regle(themes: dict[str, Theme]) -> Decision:
     perf, valid, usage, fiab = (t("performance_benchmark"), t("validite_benchmark"),
                                 t("usage_reel"), t("fiabilite_securite"))
 
-    if fiab.c() >= 3 and usage.c() >= 2 and usage.o() == 0:
+    prometteur = max(perf.o(), usage.o())
+    if fiab.c() >= 3 and usage.c() >= 2 and usage.o() == 0 and prometteur < 2:
         return Decision("exclure", CONFIANCE[min(fiab.c(), usage.c())], [
             ("Des échecs graves sont documentés par plusieurs sources indépendantes", fiab.critiques),
             ("Les retours en usage réel sont négatifs", usage.critiques),
@@ -147,16 +153,18 @@ def _regle(themes: dict[str, Theme]) -> Decision:
             ("Les résultats en usage réel sont confirmés par des sources indépendantes", usage.optimistes),
             ("Les scores sur les benchmarks vont dans le même sens", perf.optimistes),
         ])
-    prometteur = max(perf.o(), usage.o())
     ecart = max(valid.c(), usage.c(), fiab.c())
     if prometteur >= 2 and ecart >= 2:
         cote_prometteur = perf if perf.o() >= usage.o() else usage
-        cote_ecart = max((valid, usage, fiab), key=lambda x: x.c())
-        return Decision("pilote_controle", CONFIANCE[min(prometteur, ecart)], [
-            (f"Les résultats sont prometteurs ({cote_prometteur.libelle.lower()})", cote_prometteur.optimistes),
-            (f"Mais un écart avec la fiabilité réelle est documenté ({cote_ecart.libelle.lower()})",
-             cote_ecart.critiques),
-        ])
+        justification = [
+            (f"Les résultats sont prometteurs ({cote_prometteur.libelle.lower()})", cote_prometteur.optimistes)]
+        # Chaque écart documenté (niveau >= moyen) justifie que le pilote soit CONTRÔLÉ
+        for th in sorted((valid, usage, fiab), key=lambda x: -x.c()):
+            if th.c() >= 2:
+                justification.append((f"Mais un écart est documenté : {th.libelle.lower()} "
+                                      f"({th.preuve_crit.sources_independantes} sources indépendantes critiques)",
+                                      th.critiques))
+        return Decision("pilote_controle", CONFIANCE[min(prometteur, ecart)], justification)
     justification = []
     if perf.optimistes or usage.optimistes:
         justification.append(("Quelques résultats positifs existent", perf.optimistes + usage.optimistes))

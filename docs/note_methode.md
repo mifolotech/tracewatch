@@ -36,12 +36,12 @@ Chaque document conserve son URL, sa date de publication et de collecte, sa fami
 
 Une publication ancienne mais centrale reste donc pertinente. Un indicateur de qualité signale le bruit, le manque de familles, le manque de sources indépendantes et l'excès de republications. Le corpus brut contient 26 % de bruit (66 % des articles du blog OpenAI sont hors sujet). Une fois resserré (pertinence ≥ 0,3, un document par travail), il n'en contient plus du tout et garde ses cinq familles.
 
-**Analyse contrôlée par IA.** Un LLM (Gemini, modèle `gemini-3.5-flash`, température 0) lit chaque document retenu. Il propose au plus cinq affirmations, chacune avec une **citation copiée mot pour mot**, une catégorie (fait, interprétation, lacune, risque, signal), un thème parmi six imposés et une position (optimiste, critique ou neutre). **Le code vérifie ensuite que la citation figure dans le document.** Seules des différences typographiques sont tolérées : casse, espaces, guillemets, tirets. Un mot ou un chiffre modifié suffit à rejeter l'affirmation. Le niveau de preuve d'un ensemble d'affirmations dépend du nombre de travaux indépendants qui le soutiennent : fort à partir de 3, moyen à 2, faible à 1. Les blogs fournisseurs sont comptés à part. Toutes les réponses du LLM sont mises en cache, ce qui rend l'analyse reproductible sans clé.
+**Analyse contrôlée par IA.** Un LLM lit chaque document retenu : Gemini, à température 0, avec le modèle principal `gemini-3.5-flash`. Quand le quota gratuit d'un modèle est épuisé (20 appels par jour et par modèle), l'analyse bascule sur trois modèles de secours, et le modèle utilisé reste tracé pour chaque affirmation. Il propose au plus cinq affirmations, chacune avec une **citation copiée mot pour mot**, une catégorie (fait, interprétation, lacune, risque, signal), un thème parmi six imposés et une position (optimiste, critique ou neutre). **Le code vérifie ensuite que la citation figure dans le document.** Seules des différences typographiques sont tolérées : casse, espaces, guillemets, tirets. Un mot ou un chiffre modifié suffit à rejeter l'affirmation. Le niveau de preuve d'un ensemble d'affirmations dépend du nombre de travaux indépendants qui le soutiennent : fort à partir de 3, moyen à 2, faible à 1. Les blogs fournisseurs sont comptés à part. Toutes les réponses du LLM sont mises en cache, ce qui rend l'analyse reproductible sans clé.
 
 **Traçabilité et rapport.** Chaque affirmation vérifiée devient une preuve identifiée (P1, P2…). Le rapport est **rédigé par le code et non par le LLM**, à partir de ces seules preuves. Chaque phrase porte ses références, qui mènent à la citation exacte, au document, puis au document original du travail lorsque la citation provient d'une republication. Avant d'être enregistré, le rapport est contrôlé phrase par phrase. Une phrase sans preuve, ou une référence à une preuve rejetée, entraîne le refus du rapport.
 
 **Décision et révision.** La recommandation suit une règle fixe et publique (`rapport/generateur.py`) :
-- **exclure** si des échecs graves sont fortement documentés et qu'aucune preuve positive n'existe en usage réel ;
+- **exclure** si des échecs graves sont fortement documentés, qu'aucune preuve positive n'existe en usage réel et qu'aucun résultat n'est prometteur ;
 - **généraliser** si l'usage réel est fortement confirmé et que les critiques sont faibles ;
 - **pilote contrôlé** si les résultats sont prometteurs **et** qu'un écart avec la fiabilité réelle est documenté ;
 - **différer** dans les autres cas.
@@ -50,21 +50,27 @@ La confiance affichée est celle du plus faible niveau de preuve qui a déclench
 
 ## 3. Résultats
 
-L'analyse a porté sur 19 documents (17 ont fourni des affirmations) : **48 affirmations proposées, 48 citations vérifiées**. Le seul rejet observé était un faux rejet dû à une espace laissée par le nettoyage HTML. Nous l'avons corrigé en ajoutant une tolérance typographique et un test.
+L'analyse a porté sur les 63 documents sélectionnés (les plus pertinents de chaque famille, un par travail). 48 d'entre eux ont fourni des affirmations : **146 proposées, 144 à citation vérifiée**. Les deux rejets sont de vraies erreurs du modèle : un mot modifié (« the blog post *do* report » au lieu de « *does* report ») et une phrase absente du document. Quatre faux rejets, dus au formatage Markdown et à une espace laissée par le nettoyage HTML, ont été corrigés par des tolérances typographiques, couvertes par des tests.
 
 | Thème | Sources optimistes | Sources critiques |
 |---|---|---|
-| Scores sur les benchmarks | 4 (fort) | 5 (fort) |
-| Validité des benchmarks | 0 | 13 (fort) |
-| Fiabilité et sécurité | 0 | 3 (fort) |
-| Maturité des techniques | 2 (moyen) | 4 (fort) |
-| Usage réel, supervision humaine | 0 | 0 |
+| Scores sur les benchmarks | 11 (fort) | 12 (fort) |
+| Validité des benchmarks | 0 | 30 (fort) |
+| Résultats en usage réel | 0 (1 fournisseur) | 9 (fort) |
+| Fiabilité et sécurité | 0 | 13 (fort) |
+| Maturité des techniques | 4 (fort) | 7 (fort) |
+| Supervision humaine | 0 | 1 (faible) |
 
-**Recommandation : pilote contrôlé, confiance moyenne.** Les résultats sont prometteurs, avec des taux de résolution élevés sur SWE-bench Verified. Mais treize travaux indépendants mettent en cause la validité des benchmarks : tests défaillants, correctifs acceptés que des mainteneurs rejetteraient, données contaminées, écarts de plus de 50 % entre benchmarks publics et internes. L'hypothèse de départ est confirmée. La confiance reste moyenne, parce qu'aucune source analysée ne documente encore l'usage en conditions réelles, qui est pourtant le cœur de la question.
+**Contradictions entre fournisseurs et indépendants (scénario 3).** Elles apparaissent sur trois thèmes. Le plus net est l'usage réel : 3 affirmations optimistes d'un fournisseur, sans aucune source indépendante pour les appuyer, face à 13 affirmations critiques issues de 9 sources indépendantes.
+
+**Recommandation : pilote contrôlé, confiance forte.** Les résultats sur les benchmarks sont prometteurs (11 sources indépendantes), mais trois écarts sont fortement documentés. Le premier porte sur la validité des benchmarks : tests défaillants, correctifs acceptés que des mainteneurs rejetteraient, contamination. Le deuxième porte sur l'usage réel. Le troisième porte sur la fiabilité et la sécurité : actions destructrices, erreurs non détectées par les humains qui supervisent. L'hypothèse de départ est confirmée, et ces écarts justifient que le pilote soit encadré par une revue humaine systématique.
+
+**Une révision de la règle, assumée.** Avec l'analyse complète, la première version de la règle a recommandé « exclure ». Elle testait l'exclusion en premier, sans regarder les résultats prometteurs, alors que le CADRAGE réserve « exclure » aux cas où rien ne justifie même un essai encadré. Nous avons aligné la règle sur le CADRAGE. Modifier une règle après avoir vu le résultat est un risque méthodologique, c'est pourquoi le changement est tracé : la version « exclure » reste consultable dans l'historique de la conclusion (5 versions), et des tests fixent le nouveau comportement.
 
 ## 4. Limites
 
-- **Analyse partielle.** L'offre gratuite de Gemini est limitée à 20 appels par jour. Seuls 19 des 63 documents sélectionnés sont analysés, presque tous des publications scientifiques. La contradiction entre fournisseurs et indépendants (scénario 3) est démontrée par un test automatisé, mais elle n'apparaît pas encore sur les données réelles. Les conclusions évolueront à mesure que l'analyse progresse, et l'historique des révisions en gardera la trace.
+- **Analyse ciblée et hétérogène.** L'IA a analysé 63 documents, les plus pertinents, et non les 1 337. Quatre modèles Gemini ont été utilisés, à cause des quotas gratuits. Les deux vrais rejets viennent tous deux du modèle le plus léger, ce qui suggère une fidélité inégale entre modèles. Le modèle de chaque affirmation est tracé, ce qui permet de filtrer.
+- **Équilibre des familles.** Les blogs fournisseurs ont fourni peu d'affirmations (3 documents) face aux indépendants (17) et aux publications (18). La littérature scientifique et indépendante est, par nature, plus critique. Le déséquilibre est visible dans le rapport, qui compte les fournisseurs à part.
 - **Seule la citation est vérifiée, pas l'interprétation.** La catégorie, le thème et la position sont attribués par le LLM sans contrôle automatique. Une affirmation peut citer un passage réel et en forcer le sens. Pour cette raison, le rapport affiche la citation à côté de chaque affirmation, et le lecteur peut en juger.
 - **Pertinence par mots-clés.** La méthode est explicable, mais elle se trompe parfois : un article d'économie sur le modèle « principal-agent » passe le seuil. Le bruit reste visible et filtrable.
 - **Indépendance approximée.** Un groupe de doublons vaut une source. En revanche, deux articles distincts d'un même laboratoire comptent pour deux sources, et les financements ou affiliations communs ne sont pas détectés.
@@ -81,15 +87,15 @@ L'analyse a porté sur 19 documents (17 ont fourni des affirmations) : **48 affi
 | Retrait d'un modèle par le fournisseur (vécu pendant le projet : `gemini-2.5` est refusé aux nouveaux comptes) | Client LLM interchangeable, modèle déclaré dans le profil, cache |
 | Fuite de la clé d'API | `.env` ignoré par Git, test automatique qui cherche les clés et leur valeur réelle dans tous les fichiers du dépôt |
 | Biais des sources (surreprésentation académique, intérêt commercial des fournisseurs) | Fiabilité par famille, fournisseurs comptés à part, alerte si les sources indépendantes manquent |
-| Non-reproductibilité (sites qui changent, quotas) | Jeu de démo figé (125 documents réels et réponses du LLM), reconstruit sans clé ni réseau, avec un rapport identique |
+| Non-reproductibilité (sites qui changent, quotas) | Jeu de démo figé (171 documents réels et réponses du LLM), reconstruit sans clé ni réseau, avec un rapport identique |
 
 ## 6. Validation
 
-Le projet compte 55 tests automatisés, dont un fichier par scénario d'examen :
+Le projet compte 61 tests automatisés, dont un fichier par scénario d'examen :
 1. doublons ;
 2. fraîcheur et pertinence ;
 3. contradiction ;
 4. bruit ;
 5. traçabilité.
 
-S'y ajoutent des tests sur le rapport, la démo hors ligne, la sécurité et le tableau de bord. L'installation a été testée sur une copie propre du dépôt. Le test du scénario 3 remplace le LLM par un faux modèle aux réponses connues. Il vérifie ainsi le code (rejet d'une citation inventée, détection de la contradiction, comptage des sources) indépendamment du comportement du modèle réel.
+S'y ajoutent des tests sur le rapport et la règle de décision, la démo hors ligne, la sécurité et le tableau de bord. L'installation a été testée sur une copie propre du dépôt. Le test du scénario 3 remplace le LLM par un faux modèle aux réponses connues. Il vérifie ainsi le code (rejet d'une citation inventée, détection de la contradiction, comptage des sources) indépendamment du comportement du modèle réel.
