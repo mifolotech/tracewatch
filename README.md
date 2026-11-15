@@ -85,8 +85,9 @@ tracewatch/
 │   │   ├── fraicheur.py
 │   │   ├── fiabilite.py
 │   │   └── qualite_corpus.py
-│   ├── analyse/               # étape 6
-│   │   ├── llm_client.py      # LLM interchangeable
+│   ├── analyse/               # étape 6 : python -m tracewatch.analyse
+│   │   ├── __main__.py        # sélection des documents, analyse, bilan
+│   │   ├── llm_client.py      # LLM interchangeable + cache
 │   │   ├── extraction.py      # affirmations + citations
 │   │   ├── verification.py    # la citation existe-t-elle vraiment ?
 │   │   ├── contradictions.py  # fournisseur vs indépendant
@@ -176,13 +177,15 @@ tracewatch/
 - **Fini quand :** les tests 2 et 4 passent. ✅ 7/7 et 4/4. Vraie base : 26 % de bruit → 0 % après resserrement (944 travaux, 5 familles).
 
 ### Étape 6. Analyse contrôlée par IA (le cœur, 20 % de la note)
-- [ ] Client LLM interchangeable avec cache
-- [ ] Extraction d'affirmations avec citation exacte
-- [ ] Vérification automatique que la citation existe dans le document (sinon rejet)
-- [ ] Classement : fait / interprétation / lacune / risque / signal
-- [ ] Détection des contradictions fournisseur vs indépendant
-- [ ] Niveau de preuve selon le nombre de sources **indépendantes**
-- **Fini quand :** le test 3 passe et aucune affirmation sans citation vérifiée n'entre dans le rapport.
+- [x] Client LLM interchangeable avec cache (Gemini `gemini-3.5-flash` ; sans clé : cache seul)
+- [x] Extraction d'affirmations avec citation exacte
+- [x] Vérification automatique que la citation existe dans le document (sinon rejet), revérifiée à chaque lancement
+- [x] Classement : fait / interprétation / lacune / risque / signal (+ thème, position optimiste/critique, sous-question)
+- [x] Détection des contradictions fournisseur vs indépendant (par thème, positions opposées)
+- [x] Niveau de preuve selon le nombre de sources **indépendantes** (clusters, fournisseurs comptés à part)
+- Lancer : `python -m tracewatch.analyse` (relançable : reprend là où le quota l'a arrêtée)
+- **Fini quand :** le test 3 passe et aucune affirmation sans citation vérifiée n'entre dans le rapport. ✅ 15/15.
+- ⚠ Quota gratuit Gemini : **20 appels par jour et par modèle**. Analyse réelle en cours : 19 documents sur 63 sélectionnés (48 affirmations, 100 % vérifiées).
 
 ### Étape 7. Traçabilité (test 5)
 - [ ] Chaque phrase du rapport pointe vers un identifiant de preuve, puis vers le document original

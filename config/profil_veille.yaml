@@ -240,6 +240,38 @@ dedoublonnage:
   priorite_original: [publication, independant, benchmark, depot, fournisseur]
 
 # ---------------------------------------------------------------------
+# 6 bis. Analyse contrôlée par IA (étape 6)
+# ---------------------------------------------------------------------
+analyse:
+  fournisseur: gemini            # remplaçable par LLM_PROVIDER dans .env
+  modele: gemini-3.5-flash       # gemini-2.5-* refusés aux nouveaux comptes (testé le 2026-11-15)
+  temperature: 0                 # réponses les plus stables possible
+  max_affirmations_par_document: 5
+  longueur_min_document: 300     # en dessous, pas assez de texte à citer
+  longueur_max_document: 15000   # au-delà, on tronque (coût et quota)
+  longueur_min_citation: 20      # une citation trop courte ne prouve rien
+  pause_entre_appels: 12         # secondes : reste sous la limite gratuite par minute (mesuré)
+
+  # Nombre de documents analysés par famille : les plus pertinents, un par travail.
+  # L'équilibre entre familles compte plus que le volume (contradictions, scénario 3).
+  selection:
+    publication: 20
+    independant: 20
+    fournisseur: 20
+    depot: 8
+    benchmark: 6
+
+  # Thèmes imposés au LLM : deux affirmations du même thème aux positions
+  # opposées (optimiste / critique) forment une contradiction.
+  themes:
+    performance_benchmark: "scores and results reported on agent benchmarks (SWE-bench, WebArena...)"
+    validite_benchmark: "what benchmarks really measure: contamination, realism, flawed tests, gaming"
+    usage_reel: "results in real-world use, production deployments, field feedback, productivity"
+    fiabilite_securite: "failures, errors, destructive actions, prompt injection, security and safety"
+    maturite_approches: "maturity of agent techniques: planning, memory, tool use, multi-agent"
+    supervision_humaine: "need for human review, oversight, controlled pilots, governance"
+
+# ---------------------------------------------------------------------
 # 7. Niveau de preuve (étape 6)
 # Compté en sources INDÉPENDANTES : un cluster de republications = 1 source.
 # ---------------------------------------------------------------------

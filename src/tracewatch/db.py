@@ -21,6 +21,7 @@ DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "tracewatch.db"
 
 SOURCE_FAMILIES = ("publication", "benchmark", "depot", "fournisseur", "independant")
 CLAIM_CATEGORIES = ("fait", "interpretation", "lacune", "risque", "signal")
+CLAIM_POSITIONS = ("optimiste", "critique", "neutre")
 
 SCHEMA = f"""
 -- Documents normalisés (un par document collecté)
@@ -66,6 +67,7 @@ CREATE TABLE IF NOT EXISTS claims (
     citation_verifiee  INTEGER NOT NULL DEFAULT 0 CHECK (citation_verifiee IN (0, 1)),
     categorie          TEXT CHECK (categorie IN {CLAIM_CATEGORIES})
 );
+-- Colonnes ajoutées à l'étape 6 : voir COLONNES_AJOUTEES (migration automatique)
 
 -- Conclusions du rapport
 CREATE TABLE IF NOT EXISTS conclusions (
@@ -101,6 +103,25 @@ CREATE INDEX IF NOT EXISTS idx_documents_cluster   ON documents(cluster_id);
 CREATE INDEX IF NOT EXISTS idx_claims_document     ON claims(document_id);
 """
 
+# Colonnes ajoutées après la création initiale : ajoutées aux bases existantes sans perte.
+COLONNES_AJOUTEES = {
+    "claims": {
+        "theme": "TEXT",
+        "position": f"TEXT CHECK (position IN {CLAIM_POSITIONS})",
+        "sous_question": "TEXT",
+        "modele": "TEXT",  # quel LLM a proposé l'affirmation
+        "date_extraction": "TEXT",
+    },
+}
+
+
+def _migrer(conn: sqlite3.Connection) -> None:
+    for table, colonnes in COLONNES_AJOUTEES.items():
+        existantes = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+        for nom, definition in colonnes.items():
+            if nom not in existantes:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {nom} {definition}")
+
 
 def get_db_path() -> Path:
     """Chemin de la base : variable TRACEWATCH_DB du .env, sinon data/tracewatch.db."""
@@ -124,6 +145,7 @@ def init_db(db_path: Path | str | None = None) -> Path:
     path = Path(db_path) if db_path else get_db_path()
     with get_connection(path) as conn:
         conn.executescript(SCHEMA)
+        _migrer(conn)
     return path
 
 

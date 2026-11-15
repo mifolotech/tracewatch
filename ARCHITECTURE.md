@@ -73,7 +73,7 @@ Profil de veille (YAML)
 - `documents` : documents normalisés (ci-dessus)
 - `clusters` : `cluster_id`, `document_original_id`, `taille`
 - `scores` : `document_id`, `pertinence`, `fraicheur`, `fiabilite`
-- `claims` : `id`, `document_id`, `texte`, `citation`, `citation_verifiee`, `categorie`
+- `claims` : `id`, `document_id`, `texte`, `citation`, `citation_verifiee`, `categorie`, et depuis l'étape 6 : `theme`, `position` (optimiste / critique / neutre), `sous_question`, `modele`, `date_extraction`
 - `conclusions` : `id`, `texte`, `niveau_preuve`, `version`
 - `conclusion_claims` : lien entre conclusion et affirmations
 - `revisions` : historique des conclusions
