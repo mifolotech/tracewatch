@@ -109,7 +109,8 @@ tracewatch/
 │   ├── test_s5_tracabilite.py
 │   ├── test_rapport.py        # rapport complet, décision, révisions
 │   ├── test_demo.py           # démo sans clé ni réseau, reproductible
-│   └── test_securite.py       # aucun secret dans le dépôt
+│   ├── test_securite.py       # aucun secret dans le dépôt
+│   └── test_app.py            # tableau de bord, y compris base vide
 │
 ├── rapports/                  # rapports générés par le système
 └── docs/                      # étape 10
@@ -213,7 +214,7 @@ tracewatch/
 - [x] Vérifier qu'aucun secret n'est dans le dépôt : `tests/test_securite.py` (motifs de clés + vraies valeurs du `.env`)
 - [x] README d'installation testé sur une copie propre (clone, nouvel environnement, installation, démo, tests)
 - [ ] Une personne extérieure à l'équipe suit la section 8 sur son propre ordinateur
-- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 53/53.
+- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 55/55.
 
 ### Étape 10. Documentation et défense
 - [ ] Note de 2 à 4 pages : méthode de veille, limites, risques
@@ -332,7 +333,7 @@ Le navigateur s'ouvre sur le tableau de bord : choisir **« Démo (figée) »** 
 ### 8.3 Vérifier que tout fonctionne
 
 ```bash
-pytest                             # 53 tests : les 5 scénarios, rapport, démo, sécurité
+pytest                             # 55 tests : les 5 scénarios, rapport, démo, sécurité, tableau de bord
 ```
 
 ### 8.4 Chaîne complète sur des données fraîches (facultatif, clé Gemini nécessaire)

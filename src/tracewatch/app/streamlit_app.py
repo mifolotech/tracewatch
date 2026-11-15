@@ -50,9 +50,16 @@ PROFIL = charger_profil()
 from tracewatch import demo as _demo  # noqa: E402
 from tracewatch.rapport.generateur import DOSSIER_RAPPORTS  # noqa: E402
 
+def _nb_documents(chemin) -> int:
+    with get_connection(chemin) as c:
+        return c.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
+
+
 with st.sidebar:
     st.header("Base de données")
+    reelle_vide = _nb_documents(init_db()) == 0
     choix_base = st.radio("Données affichées", ["Base réelle", "Démo (figée)"],
+                          index=1 if reelle_vide else 0,  # première ouverture : la démo
                           help="La démo est un échantillon figé, reconstruit sans clé ni réseau.")
     if choix_base.startswith("Démo"):
         if not _demo.BASE_DEMO.exists():
@@ -68,6 +75,12 @@ with st.sidebar:
 if st.session_state.get("base") != choix_base:
     st.session_state["base"] = choix_base
     st.session_state.pop("rapport", None)
+
+if _nb_documents(CHEMIN) == 0:
+    st.title("🔎 TraceWatch")
+    st.info("La base réelle est vide. Choisir **Démo (figée)** dans la barre latérale, ou lancer la collecte : "
+            "`python -m tracewatch.collecte` puis `normalisation`, `scoring`, `analyse` (voir le README, section 8).")
+    st.stop()
 
 
 def conn():
