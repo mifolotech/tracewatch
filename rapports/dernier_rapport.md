@@ -48,21 +48,21 @@ _Hypothèse de départ (Pilote contrôlé) : confirmée par les preuves actuelle
 
 ## 4. Contradictions
 
-- Maturité des techniques d'agents (fournisseur vs indépendant) : 5 affirmation(s) optimiste(s) (niveau fort) s'opposent à 9 critique(s) (niveau fort) [P24](#p24)[P38](#p38)[P15](#p15)[P19](#p19).
-  - Optimiste : HyperAgent s'appuie sur quatre agents spécialisés — Planner, Navigator, Code Editor et Executor — capables de prendre en charge l'ensemble du cycle de vie des tâches d'ingénierie logicielle, de la planification initiale à la vérification finale [P24](#p24).
-  - Optimiste : Les résultats suggèrent que les traces de résolution de problèmes peuvent servir de base évolutive pour les agents d'ingénierie logicielle auto-évolutifs [P38](#p38).
-  - Critique : Contrairement aux configurations d'agents complexes, la méthode Agentless repose sur un processus en trois phases (localisation, réparation et validation) sans laisser le LLM prendre de décisions d'actions ou manipuler des outils complexes [P15](#p15).
-  - Critique : L'utilisation directe de générateurs de tests de reproduction de bugs pour guider la génération de correctifs n'est pas bénéfique, car les tests défaillants peuvent induire les agents en erreur et les tests réussis n'apportent que des gains limités ou négatifs [P19](#p19).
-- Scores sur les benchmarks (fournisseur vs indépendant) : 17 affirmation(s) optimiste(s) (niveau fort) s'opposent à 13 critique(s) (niveau fort) [P11](#p11)[P12](#p12)[P2](#p2)[P3](#p3).
-  - Optimiste : L'évaluation de Live-SWE-agent sur le benchmark SWE-bench Verified montre un taux de résolution de 77,4 % sans mise à l'échelle au moment du test, surpassant tous les agents logiciels existants [P11](#p11).
-  - Optimiste : Sur le benchmark récent SWE-Bench Pro, Live-SWE-agent surpasse les agents logiciels conçus manuellement en atteignant un taux de résolution de 45,8 % [P12](#p12).
-  - Critique : Bien que des frameworks d'agents comme SWE-Agent obtiennent de bons résultats sur la correction de bugs en Python, ils s'avèrent insuffisants sur des tâches comme la génération de tests et dans des langages tels que C++ et Java [P2](#p2).
-  - Critique : Le framework SWE-Agent associé à DeepSeek-V3.1 n'atteint qu'un score maximal de 25,0 % en génération de tests pour le langage C++ [P3](#p3).
+- Maturité des techniques d'agents (fournisseur vs indépendant) : 5 affirmation(s) optimiste(s) (niveau fort) s'opposent à 9 critique(s) (niveau fort) [P86](#p86)[P24](#p24)[P15](#p15)[P19](#p19).
+  - Optimiste (fournisseur, GitHub Blog) : Les architectures d'agents sont passées d'outils cantonnés à une seule session à des agents persistants capables d'opérer sur plusieurs jours et d'en orchestrer d'autres [P86](#p86).
+  - Optimiste (publication, OpenAlex (arXiv (Cornell University))) : HyperAgent s'appuie sur quatre agents spécialisés — Planner, Navigator, Code Editor et Executor — capables de prendre en charge l'ensemble du cycle de vie des tâches d'ingénierie logicielle, de la planification initiale à la vérification finale [P24](#p24).
+  - Critique (publication, arXiv) : Contrairement aux configurations d'agents complexes, la méthode Agentless repose sur un processus en trois phases (localisation, réparation et validation) sans laisser le LLM prendre de décisions d'actions ou manipuler des outils complexes [P15](#p15).
+  - Critique (publication, arXiv) : L'utilisation directe de générateurs de tests de reproduction de bugs pour guider la génération de correctifs n'est pas bénéfique, car les tests défaillants peuvent induire les agents en erreur et les tests réussis n'apportent que des gains limités ou négatifs [P19](#p19).
+- Scores sur les benchmarks (fournisseur vs indépendant) : 17 affirmation(s) optimiste(s) (niveau fort) s'opposent à 13 critique(s) (niveau fort) [P49](#p49)[P50](#p50)[P2](#p2)[P3](#p3).
+  - Optimiste (fournisseur, GitHub Blog) : Dans le classement d'Artificial Analysis pour les agents de codage, Fusion Max se situe à deux points d'Opus 5.5 Max pour un coût divisé par deux et 40 % de temps en moins par tâche [P49](#p49).
+  - Optimiste (fournisseur, GitHub Blog) : GitHub affirme que son outil Copilot code review Max a obtenu le score F1 le plus élevé sur le benchmark ReviewBench pour les anomalies de gravité élevée [P50](#p50).
+  - Critique (publication, arXiv) : Bien que des frameworks d'agents comme SWE-Agent obtiennent de bons résultats sur la correction de bugs en Python, ils s'avèrent insuffisants sur des tâches comme la génération de tests et dans des langages tels que C++ et Java [P2](#p2).
+  - Critique (publication, arXiv) : Le framework SWE-Agent associé à DeepSeek-V3.1 n'atteint qu'un score maximal de 25,0 % en génération de tests pour le langage C++ [P3](#p3).
 - Résultats en usage réel (fournisseur vs indépendant) : 3 affirmation(s) optimiste(s) (niveau insuffisant) s'opposent à 13 critique(s) (niveau fort) [P83](#p83)[P84](#p84)[P60](#p60)[P98](#p98).
-  - Optimiste : En septembre 2026, plus de 40 % des pull requests sur GitHub étaient initiées par un premier jet généré par un agent, contre 17 % en mars [P83](#p83).
-  - Optimiste : Le taux de fusion sous deux semaines des pull requests impliquant des agents a atteint 90 % en septembre, dépassant les 86 % constatés pour les pull requests sans intervention d'agent [P84](#p84).
-  - Critique : Sur un projet d'ingénierie réel doté d'un budget de plusieurs milliers de dollars, le modèle Opus 4.6 n'a produit que l'équivalent de quelques jours de travail humain et son code comportait des anomalies [P60](#p60).
-  - Critique : Environ la moitié des PR de SWE-bench Verified validées par les tests et écrites par des agents ne seraient pas fusionnées dans la branche principale par les mainteneurs des dépôts [P98](#p98).
+  - Optimiste (fournisseur, GitHub Blog) : En septembre 2026, plus de 40 % des pull requests sur GitHub étaient initiées par un premier jet généré par un agent, contre 17 % en mars [P83](#p83).
+  - Optimiste (fournisseur, GitHub Blog) : Le taux de fusion sous deux semaines des pull requests impliquant des agents a atteint 90 % en septembre, dépassant les 86 % constatés pour les pull requests sans intervention d'agent [P84](#p84).
+  - Critique (independant, METR) : Sur un projet d'ingénierie réel doté d'un budget de plusieurs milliers de dollars, le modèle Opus 4.6 n'a produit que l'équivalent de quelques jours de travail humain et son code comportait des anomalies [P60](#p60).
+  - Critique (independant, METR) : Environ la moitié des PR de SWE-bench Verified validées par les tests et écrites par des agents ne seraient pas fusionnées dans la branche principale par les mainteneurs des dépôts [P98](#p98).
 
 ## 5. Incertitudes et lacunes
 
@@ -206,9 +206,9 @@ Source : [Frontier Risk Report (February to March 2026)](https://metr.org/blog/2
 > « When agents report confidence, it often carries little signal. On one benchmark, most models couldn’t distinguish their correct predictions from incorrect ones better than chance. »  
 Source : [New Paper: Towards a science of AI agent reliability](https://www.normaltech.ai/p/new-paper-towards-a-science-of-ai) (AI as Normal Technology, independant, 2026-02-24)
 
-<a id="p38"></a>**P38** · interpretation · Les résultats suggèrent que les traces de résolution de problèmes peuvent servir de base évolutive pour les agents d'ingénierie logicielle auto-évolutifs.  
-> « These results suggest that solving traces can serve as a scalable substrate for self-evolving SWE agents. »  
-Source : [Socratic-SWE: Self-Evolving Coding Agents via Trace-Derived Agent Skills](https://arxiv.org/abs/2606.07412) (arXiv, publication, 2026-06-05)
+<a id="p86"></a>**P86** · signal · Les architectures d'agents sont passées d'outils cantonnés à une seule session à des agents persistants capables d'opérer sur plusieurs jours et d'en orchestrer d'autres.  
+> « Agents moved from single-session tools to persistent ones that could track progress across days and orchestrate other specialized agents. »  
+Source : [Octoverse: Commits, pushes, reach new highs in 2026 as developers build with agents](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/) (GitHub Blog, fournisseur, 2026-10-28)
 
 <a id="p15"></a>**P15** · fait · Contrairement aux configurations d'agents complexes, la méthode Agentless repose sur un processus en trois phases (localisation, réparation et validation) sans laisser le LLM prendre de décisions d'actions ou manipuler des outils complexes.  
 > « Compared to the verbose and complex setup of agent-based approaches, Agentless employs a simplistic three-phase process of localization, repair, and patch validation, without letting the LLM decide future actions or operate with complex tools. »  
@@ -219,15 +219,13 @@ Ce travail a 2 autre(s) version(s) ou republication(s), comptées comme UNE seul
 > « We first conduct a preliminary study and find that directly using advanced BRT generators to guide patch generation is not beneficial: fail-to-fail BRTs can mislead agents, while even fail-to-pass BRTs bring limited or negative gains. »  
 Source : [SWE-Doctor: Guiding Software Engineering Agents with Runtime Diagnosis from Multi-Faceted Bug Reproduction Tests](https://arxiv.org/abs/2607.00990) (arXiv, publication, 2026-07-01)
 
-<a id="p11"></a>**P11** · fait · L'évaluation de Live-SWE-agent sur le benchmark SWE-bench Verified montre un taux de résolution de 77,4 % sans mise à l'échelle au moment du test, surpassant tous les agents logiciels existants.  
-> « Our evaluation on the widely studied SWE-bench Verified benchmark shows that LIVE-SWE-AGENT can achieve an impressive solve rate of 77.4% without test-time scaling, outperforming all existing software agents, including the best proprietary solution. »  
-Source : [Live-SWE-agent: Can Software Engineering Agents Self-Evolve on the Fly?](https://arxiv.org/abs/2511.13646) (arXiv, publication, 2025-11-17)  
-Ce travail a 1 autre(s) version(s) ou republication(s), comptées comme UNE seule source.
+<a id="p49"></a>**P49** · fait · Dans le classement d'Artificial Analysis pour les agents de codage, Fusion Max se situe à deux points d'Opus 5.5 Max pour un coût divisé par deux et 40 % de temps en moins par tâche.  
+> « In the Artificial Analysis Coding Agent Index, Fusion Max scored within two points of Opus 5.5 Max at half the cost and 40% less time per task. »  
+Source : [GitHub Universe 2026: Evolving every layer of the stack](https://github.blog/news-insights/company-news/github-universe-2026-evolving-every-layer-of-the-stack/) (GitHub Blog, fournisseur, 2026-10-28)
 
-<a id="p12"></a>**P12** · fait · Sur le benchmark récent SWE-Bench Pro, Live-SWE-agent surpasse les agents logiciels conçus manuellement en atteignant un taux de résolution de 45,8 %.  
-> « Moreover, Live-SWE-agent outperforms state-of-the-art manually crafted software agents on the recent SWE-Bench Pro benchmark, achieving the best-known solve rate of 45.8%. »  
-Source : [Live-SWE-agent: Can Software Engineering Agents Self-Evolve on the Fly?](https://arxiv.org/abs/2511.13646) (arXiv, publication, 2025-11-17)  
-Ce travail a 1 autre(s) version(s) ou republication(s), comptées comme UNE seule source.
+<a id="p50"></a>**P50** · fait · GitHub affirme que son outil Copilot code review Max a obtenu le score F1 le plus élevé sur le benchmark ReviewBench pour les anomalies de gravité élevée.  
+> « Today, we introduced Copilot code review Max, which posted the highest F1 score on ReviewBench for high-severity issues. »  
+Source : [GitHub Universe 2026: Evolving every layer of the stack](https://github.blog/news-insights/company-news/github-universe-2026-evolving-every-layer-of-the-stack/) (GitHub Blog, fournisseur, 2026-10-28)
 
 <a id="p2"></a>**P2** · fait · Bien que des frameworks d'agents comme SWE-Agent obtiennent de bons résultats sur la correction de bugs en Python, ils s'avèrent insuffisants sur des tâches comme la génération de tests et dans des langages tels que C++ et Java.  
 > « We evaluate OmniCode with popular agent frameworks such as SWE-Agent and show that while they may perform well on bug fixing for Python, they fall short on tasks such as Test Generation and in languages such as C++ and Java. »  

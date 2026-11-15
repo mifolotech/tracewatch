@@ -186,3 +186,15 @@ MARKDOWN = "The agent ran `rm -rf` on the **whole workspace**, and the blog post
 ])
 def test_markdown_tolere_mais_pas_les_mots(citation, attendu):
     assert verifier_citation(citation, MARKDOWN) is attendu
+
+
+def test_la_contradiction_apparait_dans_le_rapport(env_test):
+    """Scénario 3 : la divergence doit être visible dans le RAPPORT, affirmation du fournisseur en tête."""
+    from tracewatch.rapport.generateur import generer_rapport
+    conn, _, _, _, tmp_path = env_test
+    md = generer_rapport(conn, PROFIL, dossier=tmp_path / "rapports").markdown
+    section = md.split("## 4. Contradictions", 1)[1].split("## 5.", 1)[0]
+    assert "(fournisseur vs indépendant)" in section
+    lignes = [l.strip() for l in section.splitlines() if l.strip().startswith("- Optimiste")]
+    assert lignes[0].startswith("- Optimiste (fournisseur, Vendor launch)")
+    assert "Critique (independant" in section or "Critique (publication" in section

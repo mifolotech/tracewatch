@@ -215,7 +215,7 @@ tracewatch/
 - [x] Vérifier qu'aucun secret n'est dans le dépôt : `tests/test_securite.py` (motifs de clés + vraies valeurs du `.env`)
 - [x] README d'installation testé sur une copie propre (clone, nouvel environnement, installation, démo, tests)
 - [ ] Une personne extérieure à l'équipe suit la section 8 sur son propre ordinateur
-- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 61/61.
+- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 62/62.
 
 ### Étape 10. Documentation et défense
 - [x] Note de 2 à 4 pages : méthode de veille, limites, risques → [`docs/note_methode.md`](docs/note_methode.md)
@@ -337,7 +337,7 @@ Le navigateur s'ouvre sur le tableau de bord : choisir **« Démo (figée) »** 
 ### 8.3 Vérifier que tout fonctionne
 
 ```bash
-pytest                             # 61 tests : les 5 scénarios, rapport, démo, sécurité, tableau de bord
+pytest                             # 62 tests : les 5 scénarios, rapport, démo, sécurité, tableau de bord
 ```
 
 ### 8.4 Chaîne complète sur des données fraîches (facultatif, clé Gemini nécessaire)
@@ -358,14 +358,14 @@ Retrouver la source d'une preuve ou d'une conclusion : `python -m tracewatch.rap
 
 ## 9. Livrables à rendre (checklist de l'examen)
 
-- [ ] Application ou prototype exécutable
-- [ ] Code source propre et documenté, sans secrets
-- [ ] README d'installation et de lancement
-- [ ] Description courte de l'architecture et des décisions techniques
-- [ ] Jeu de données ou profil de démonstration
-- [ ] Rapport de veille produit par le système
-- [ ] Note de 2 à 4 pages (méthode, limites, risques)
-- [ ] Présentation et démonstration orale, avec défense individuelle
+- [x] Application ou prototype exécutable → tableau de bord Streamlit + commandes `python -m tracewatch.*`
+- [x] Code source propre et documenté, sans secrets → `src/`, 62 tests dont `tests/test_securite.py`
+- [x] README d'installation et de lancement → section 8 (testée sur une copie propre)
+- [x] Description courte de l'architecture et des décisions techniques → `docs/architecture.md`
+- [x] Jeu de données ou profil de démonstration → `data/demo/` + `config/profil_veille.yaml`
+- [x] Rapport de veille produit par le système → `rapports/dernier_rapport.md` (et `rapports/demo/`)
+- [x] Note de 2 à 4 pages (méthode, limites, risques) → `docs/note_methode.md`
+- [ ] Présentation et démonstration orale, avec défense individuelle → préparée dans `docs/oral.md`, à répéter
 
 **Barème indicatif :** question et méthode 15 %, collecte et traçabilité 15 %, normalisation et dédoublonnage 15 %, analyse des preuves 20 %, rapport 15 %, technique et sécurité 10 %, interface et défense 10 %.
 

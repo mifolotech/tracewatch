@@ -112,7 +112,7 @@ class Synthese:
 def _preuves(conn: sqlite3.Connection) -> dict[int, sqlite3.Row]:
     """Preuves vérifiées, triées par fiabilité puis pertinence de leur document."""
     lignes = conn.execute(
-        """SELECT c.*, d.source_family, d.title AS doc_titre,
+        """SELECT c.*, d.source_family, d.source_name, d.title AS doc_titre,
                   COALESCE(s.fiabilite, 0) AS fiabilite, COALESCE(s.pertinence, 0) AS pertinence
            FROM claims c JOIN documents d ON d.id = c.document_id
            LEFT JOIN scores s ON s.document_id = d.id
@@ -296,13 +296,21 @@ def rediger(conn: sqlite3.Connection, synthese: Synthese, profil: dict) -> str:
     if not synthese.divergences:
         lignes.append("_Aucune contradiction détectée sur les preuves actuelles._")
     for dv in synthese.divergences:
-        opt, crit = [c["id"] for c in dv.optimistes], [c["id"] for c in dv.critiques]
+        # Scénario 3 : montrer D'ABORD l'affirmation du fournisseur et les sources indépendantes qui la contestent
+        opt = [c["id"] for c in sorted(dv.optimistes, key=lambda c: c["source_family"] != "fournisseur")]
+        crit = [c["id"] for c in sorted(dv.critiques,
+                                        key=lambda c: c["source_family"] not in ("independant", "publication"))]
         lignes.append("- " + avec_refs(
             f"{LIBELLES_THEMES.get(dv.theme, dv.theme)} ({dv.type}) : {len(opt)} affirmation(s) optimiste(s) "
             f"(niveau {dv.preuve_optimistes.niveau}) s'opposent à {len(crit)} critique(s) "
             f"(niveau {dv.preuve_critiques.niveau})", opt[:2] + crit[:2]))
-        lignes += ["  " + puce(synthese, i, "Optimiste : ") for i in opt[:2]]
-        lignes += ["  " + puce(synthese, i, "Critique : ") for i in crit[:2]]
+
+        def camp(i: int, nom: str) -> str:
+            p = synthese.preuves[i]
+            return "  " + puce(synthese, i, f"{nom} ({p['source_family']}, {p['source_name']}) : ")
+
+        lignes += [camp(i, "Optimiste") for i in opt[:2]]
+        lignes += [camp(i, "Critique") for i in crit[:2]]
 
     section("## 5. Incertitudes et lacunes", _choisir(synthese, ("lacune",)), "Aucune lacune signalée.")
     sans_preuve = [th.libelle for th in synthese.themes.values()

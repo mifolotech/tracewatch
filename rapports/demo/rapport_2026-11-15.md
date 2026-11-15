@@ -48,21 +48,21 @@ _Hypothèse de départ (Pilote contrôlé) : confirmée par les preuves actuelle
 
 ## 4. Contradictions
 
-- Maturité des techniques d'agents (fournisseur vs indépendant) : 5 affirmation(s) optimiste(s) (niveau fort) s'opposent à 9 critique(s) (niveau fort) [P16](#p16)[P42](#p42)[P14](#p14)[P17](#p17).
-  - Optimiste : Les résultats suggèrent que les traces de résolution de problèmes peuvent servir de base évolutive pour les agents d'ingénierie logicielle auto-évolutifs [P16](#p16).
-  - Optimiste : HyperAgent s'appuie sur quatre agents spécialisés — Planner, Navigator, Code Editor et Executor — capables de prendre en charge l'ensemble du cycle de vie des tâches d'ingénierie logicielle, de la planification initiale à la vérification finale [P42](#p42).
-  - Critique : L'entraînement des agents d'ingénierie logicielle fondés sur les LLM reste contraint par la disponibilité de tâches d'ingénierie logicielle de haute qualité [P14](#p14).
-  - Critique : L'utilisation directe de générateurs de tests de reproduction de bugs pour guider la génération de correctifs n'est pas bénéfique, car les tests défaillants peuvent induire les agents en erreur et les tests réussis n'apportent que des gains limités ou négatifs [P17](#p17).
-- Scores sur les benchmarks (fournisseur vs indépendant) : 17 affirmation(s) optimiste(s) (niveau fort) s'opposent à 13 critique(s) (niveau fort) [P15](#p15)[P18](#p18)[P3](#p3)[P6](#p6).
-  - Optimiste : Le cadre Socratic-SWE surpasse les lignes de base auto-évolutives sur plusieurs benchmarks et atteint 50,40 % de réussite sur SWE-bench Verified après trois itérations [P15](#p15).
-  - Optimiste : L'approche SWE-Doctor atteint des taux moyens de résolution de 75,7 % sur SWE-bench Verified et de 59,4 % sur SWE-bench Pro, surpassant les agents existants sur l'ensemble des dix combinaisons de modèles et de benchmarks [P18](#p18).
-  - Critique : Une réévaluation rigoureuse montre que certains modèles obtiennent des résultats nettement inférieurs aux scores publiés, ce qui suggère une surestimation de leurs capacités réelles [P3](#p3).
-  - Critique : Les évaluations montrent que les benchmarks existants surestiment considérablement les capacités des agents, avec un décalage de plus de 50 % pour certains modèles sur les benchmarks publics et de 10 à 16 % sur un benchmark interne [P6](#p6).
+- Maturité des techniques d'agents (fournisseur vs indépendant) : 5 affirmation(s) optimiste(s) (niveau fort) s'opposent à 9 critique(s) (niveau fort) [P81](#p81)[P16](#p16)[P14](#p14)[P17](#p17).
+  - Optimiste (fournisseur, GitHub Blog) : Les architectures d'agents sont passées d'outils cantonnés à une seule session à des agents persistants capables d'opérer sur plusieurs jours et d'en orchestrer d'autres [P81](#p81).
+  - Optimiste (publication, arXiv) : Les résultats suggèrent que les traces de résolution de problèmes peuvent servir de base évolutive pour les agents d'ingénierie logicielle auto-évolutifs [P16](#p16).
+  - Critique (publication, arXiv) : L'entraînement des agents d'ingénierie logicielle fondés sur les LLM reste contraint par la disponibilité de tâches d'ingénierie logicielle de haute qualité [P14](#p14).
+  - Critique (publication, arXiv) : L'utilisation directe de générateurs de tests de reproduction de bugs pour guider la génération de correctifs n'est pas bénéfique, car les tests défaillants peuvent induire les agents en erreur et les tests réussis n'apportent que des gains limités ou négatifs [P17](#p17).
+- Scores sur les benchmarks (fournisseur vs indépendant) : 17 affirmation(s) optimiste(s) (niveau fort) s'opposent à 13 critique(s) (niveau fort) [P74](#p74)[P75](#p75)[P3](#p3)[P6](#p6).
+  - Optimiste (fournisseur, GitHub Blog) : Dans le classement d'Artificial Analysis pour les agents de codage, Fusion Max se situe à deux points d'Opus 5.5 Max pour un coût divisé par deux et 40 % de temps en moins par tâche [P74](#p74).
+  - Optimiste (fournisseur, GitHub Blog) : GitHub affirme que son outil Copilot code review Max a obtenu le score F1 le plus élevé sur le benchmark ReviewBench pour les anomalies de gravité élevée [P75](#p75).
+  - Critique (publication, arXiv) : Une réévaluation rigoureuse montre que certains modèles obtiennent des résultats nettement inférieurs aux scores publiés, ce qui suggère une surestimation de leurs capacités réelles [P3](#p3).
+  - Critique (publication, arXiv) : Les évaluations montrent que les benchmarks existants surestiment considérablement les capacités des agents, avec un décalage de plus de 50 % pour certains modèles sur les benchmarks publics et de 10 à 16 % sur un benchmark interne [P6](#p6).
 - Résultats en usage réel (fournisseur vs indépendant) : 3 affirmation(s) optimiste(s) (niveau insuffisant) s'opposent à 13 critique(s) (niveau fort) [P78](#p78)[P79](#p79)[P41](#p41)[P84](#p84).
-  - Optimiste : En septembre 2026, plus de 40 % des pull requests sur GitHub étaient initiées par un premier jet généré par un agent, contre 17 % en mars [P78](#p78).
-  - Optimiste : Le taux de fusion sous deux semaines des pull requests impliquant des agents a atteint 90 % en septembre, dépassant les 86 % constatés pour les pull requests sans intervention d'agent [P79](#p79).
-  - Critique : L'exactitude des réparations et le coût des échecs sont des dimensions largement indépendantes qui devraient être mesurées et rapportées conjointement [P41](#p41).
-  - Critique : Certains modèles présentés comme performants se contentent de poursuivre le bruit statistique sans apporter de réelle amélioration lors de la revalidation [P84](#p84).
+  - Optimiste (fournisseur, GitHub Blog) : En septembre 2026, plus de 40 % des pull requests sur GitHub étaient initiées par un premier jet généré par un agent, contre 17 % en mars [P78](#p78).
+  - Optimiste (fournisseur, GitHub Blog) : Le taux de fusion sous deux semaines des pull requests impliquant des agents a atteint 90 % en septembre, dépassant les 86 % constatés pour les pull requests sans intervention d'agent [P79](#p79).
+  - Critique (publication, OpenAlex (Open Collections)) : L'exactitude des réparations et le coût des échecs sont des dimensions largement indépendantes qui devraient être mesurées et rapportées conjointement [P41](#p41).
+  - Critique (independant, METR) : Certains modèles présentés comme performants se contentent de poursuivre le bruit statistique sans apporter de réelle amélioration lors de la revalidation [P84](#p84).
 
 ## 5. Incertitudes et lacunes
 
@@ -202,6 +202,10 @@ Source : [How Does Time Horizon Vary Across Domains?](https://metr.org/blog/2025
 > « While coding/agentic benchmarks 1 have proven useful for understanding AI capabilities, they typically sacrifice realism for scale and efficiency—the tasks are self-contained, don’t require prior context to understand, and use algorithmic evaluation that doesn’t capture many important capabilities. »  
 Source : [Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) (METR, independant, 2025-07-10)
 
+<a id="p81"></a>**P81** · signal · Les architectures d'agents sont passées d'outils cantonnés à une seule session à des agents persistants capables d'opérer sur plusieurs jours et d'en orchestrer d'autres.  
+> « Agents moved from single-session tools to persistent ones that could track progress across days and orchestrate other specialized agents. »  
+Source : [Octoverse: Commits, pushes, reach new highs in 2026 as developers build with agents](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/) (GitHub Blog, fournisseur, 2026-10-28)
+
 <a id="p16"></a>**P16** · interpretation · Les résultats suggèrent que les traces de résolution de problèmes peuvent servir de base évolutive pour les agents d'ingénierie logicielle auto-évolutifs.  
 > « These results suggest that solving traces can serve as a scalable substrate for self-evolving SWE agents. »  
 Source : [Socratic-SWE: Self-Evolving Coding Agents via Trace-Derived Agent Skills](https://arxiv.org/abs/2606.07412) (arXiv, publication, 2026-06-05)
@@ -214,13 +218,13 @@ Source : [Socratic-SWE: Self-Evolving Coding Agents via Trace-Derived Agent Skil
 > « We first conduct a preliminary study and find that directly using advanced BRT generators to guide patch generation is not beneficial: fail-to-fail BRTs can mislead agents, while even fail-to-pass BRTs bring limited or negative gains. »  
 Source : [SWE-Doctor: Guiding Software Engineering Agents with Runtime Diagnosis from Multi-Faceted Bug Reproduction Tests](https://arxiv.org/abs/2607.00990) (arXiv, publication, 2026-07-01)
 
-<a id="p15"></a>**P15** · fait · Le cadre Socratic-SWE surpasse les lignes de base auto-évolutives sur plusieurs benchmarks et atteint 50,40 % de réussite sur SWE-bench Verified après trois itérations.  
-> « Across SWE-bench Verified, SWE-bench Lite, SWE-bench Pro, and Terminal-Bench 2.0, Socratic-SWE consistently improves over self-evolving baselines under the same compute budget, reaching 50.40% on SWE-bench Verified after three iterations. »  
-Source : [Socratic-SWE: Self-Evolving Coding Agents via Trace-Derived Agent Skills](https://arxiv.org/abs/2606.07412) (arXiv, publication, 2026-06-05)
+<a id="p74"></a>**P74** · fait · Dans le classement d'Artificial Analysis pour les agents de codage, Fusion Max se situe à deux points d'Opus 5.5 Max pour un coût divisé par deux et 40 % de temps en moins par tâche.  
+> « In the Artificial Analysis Coding Agent Index, Fusion Max scored within two points of Opus 5.5 Max at half the cost and 40% less time per task. »  
+Source : [GitHub Universe 2026: Evolving every layer of the stack](https://github.blog/news-insights/company-news/github-universe-2026-evolving-every-layer-of-the-stack/) (GitHub Blog, fournisseur, 2026-10-28)
 
-<a id="p18"></a>**P18** · fait · L'approche SWE-Doctor atteint des taux moyens de résolution de 75,7 % sur SWE-bench Verified et de 59,4 % sur SWE-bench Pro, surpassant les agents existants sur l'ensemble des dix combinaisons de modèles et de benchmarks.  
-> « SWE-Doctor consistently outperforms existing agents across all 10 LLM-benchmark combinations, achieving average resolution rates of 75.7% on SWE-bench Verified and 59.4% on SWE-bench Pro. »  
-Source : [SWE-Doctor: Guiding Software Engineering Agents with Runtime Diagnosis from Multi-Faceted Bug Reproduction Tests](https://arxiv.org/abs/2607.00990) (arXiv, publication, 2026-07-01)
+<a id="p75"></a>**P75** · fait · GitHub affirme que son outil Copilot code review Max a obtenu le score F1 le plus élevé sur le benchmark ReviewBench pour les anomalies de gravité élevée.  
+> « Today, we introduced Copilot code review Max, which posted the highest F1 score on ReviewBench for high-severity issues. »  
+Source : [GitHub Universe 2026: Evolving every layer of the stack](https://github.blog/news-insights/company-news/github-universe-2026-evolving-every-layer-of-the-stack/) (GitHub Blog, fournisseur, 2026-10-28)
 
 <a id="p3"></a>**P3** · fait · Une réévaluation rigoureuse montre que certains modèles obtiennent des résultats nettement inférieurs aux scores publiés, ce qui suggère une surestimation de leurs capacités réelles.  
 > « Evaluations on SWE-Bench Pro Verified reveal that some models perform substantially worse than previously evaluated, suggesting that existing results on SWE-Bench Pro may overestimate real software engineering capability. »  

@@ -29,7 +29,7 @@ Chaque membre doit savoir faire deux choses : (1) présenter le schéma global e
 
 ### C : normalisation, scoring, tests (étapes 4, 5, 9)
 - **À savoir expliquer :** les 6 règles de doublon, chacune avec sa raison ; le fait qu'un cluster vaut une source ; pourquoi les classements sont exclus de la similarité (même gabarit de texte, 10 fausses paires mesurées) ; les 3 scores jamais fusionnés ; les alertes de qualité.
-- **Chiffres :** 48 groupes de doublons ; bruit 26 % → 0 % après resserrement ; 61 tests.
+- **Chiffres :** 48 groupes de doublons ; bruit 26 % → 0 % après resserrement ; 62 tests.
 - **Questions probables :**
   - *« Pourquoi TF-IDF et pas des embeddings ? »* C'est explicable, rapide, et suffisant ici : on a relu tous les groupes, sans faux doublon trouvé.
   - *« Pourquoi une demi-vie de 12 mois ? »* C'est l'horizon de la question. C'est un choix conventionnel, réglable dans le profil.
@@ -55,7 +55,7 @@ Avant l'oral : `python -m tracewatch.demo`, puis `streamlit run src/tracewatch/a
 | 4. Bruit | Corpus : curseurs à 0, puis Pertinence à 0,3 | L'alerte de bruit disparaît, la qualité passe à BON |
 | 5. Élément contesté | Rapport : cliquer sur un [Pn] ; ou Preuves : choisir une preuve | Citation exacte, lien vers le document, puis vers l'original |
 | 3. Contradiction | Contradictions | Thème « Résultats en usage réel » : fournisseur optimiste contre 9 sources indépendantes critiques |
-| Garde-fou | Terminal : `pytest -q` | 61 tests verts, dont la citation inventée rejetée |
+| Garde-fou | Terminal : `pytest -q` | 62 tests verts, dont la citation inventée rejetée |
 
 ## 4. Questions transversales (tout le monde)
 
