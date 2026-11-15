@@ -45,7 +45,29 @@ def style(chart: alt.Chart) -> alt.Chart:
 
 
 PROFIL = charger_profil()
-CHEMIN = init_db()
+
+# Choix de la base : réelle (data/tracewatch.db) ou démo figée (data/demo, reproductible sans clé)
+from tracewatch import demo as _demo  # noqa: E402
+from tracewatch.rapport.generateur import DOSSIER_RAPPORTS  # noqa: E402
+
+with st.sidebar:
+    st.header("Base de données")
+    choix_base = st.radio("Données affichées", ["Base réelle", "Démo (figée)"],
+                          help="La démo est un échantillon figé, reconstruit sans clé ni réseau.")
+    if choix_base.startswith("Démo"):
+        if not _demo.BASE_DEMO.exists():
+            with st.spinner("Construction de la démo (sans clé, sans réseau)…"):
+                _demo.construire(PROFIL)
+        CHEMIN, DOSSIER = init_db(_demo.BASE_DEMO), _demo.RAPPORTS_DEMO
+        if st.button("Reconstruire la démo"):
+            _demo.construire(PROFIL)
+            st.session_state.pop("rapport", None)
+    else:
+        CHEMIN, DOSSIER = init_db(), DOSSIER_RAPPORTS
+    st.caption(f"`{CHEMIN.name}`")
+if st.session_state.get("base") != choix_base:
+    st.session_state["base"] = choix_base
+    st.session_state.pop("rapport", None)
 
 
 def conn():
@@ -226,7 +248,7 @@ with onglets[4]:
     if st.button("Générer le rapport", type="primary"):
         with conn() as c:
             try:
-                r = generer_rapport(c, PROFIL, motif="génération depuis le tableau de bord")
+                r = generer_rapport(c, PROFIL, motif="génération depuis le tableau de bord", dossier=DOSSIER)
                 st.session_state["rapport"] = r.markdown
                 st.success(f"Rapport écrit : {r.chemin.name}. Contrôle de traçabilité passé. "
                            + ("Révisions : " + "; ".join(r.changements) if r.changements else "Aucune conclusion n'a changé."))
@@ -234,8 +256,7 @@ with onglets[4]:
                 st.error(str(e))
     texte = st.session_state.get("rapport")
     if texte is None:
-        from tracewatch.rapport.generateur import DOSSIER_RAPPORTS
-        dernier = DOSSIER_RAPPORTS / "dernier_rapport.md"
+        dernier = DOSSIER / "dernier_rapport.md"
         texte = dernier.read_text(encoding="utf-8") if dernier.exists() else None
     if texte:
         st.download_button("Télécharger (.md)", texte, file_name="rapport_tracewatch.md")

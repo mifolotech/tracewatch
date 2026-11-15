@@ -66,6 +66,7 @@ tracewatch/
 │
 ├── src/tracewatch/
 │   ├── db.py                  # schéma SQLite
+│   ├── demo.py                # étape 9 : jeu de démo figé (python -m tracewatch.demo)
 │   ├── collecte/              # étape 3 : python -m tracewatch.collecte
 │   │   ├── __main__.py        # lance toutes les sources + bilan par famille
 │   │   ├── commun.py          # profil, HTTP poli, dates, enregistrement
@@ -100,12 +101,15 @@ tracewatch/
 │   └── app/
 │       └── streamlit_app.py   # tableau de bord (6 onglets)
 │
-├── tests/                     # étape 9 : un fichier par scénario
+├── tests/                     # étape 9 : un fichier par scénario (pytest)
 │   ├── test_s1_doublons.py
 │   ├── test_s2_fraicheur_pertinence.py
 │   ├── test_s3_contradiction.py
 │   ├── test_s4_bruit.py
-│   └── test_s5_tracabilite.py
+│   ├── test_s5_tracabilite.py
+│   ├── test_rapport.py        # rapport complet, décision, révisions
+│   ├── test_demo.py           # démo sans clé ni réseau, reproductible
+│   └── test_securite.py       # aucun secret dans le dépôt
 │
 ├── rapports/                  # rapports générés par le système
 └── docs/                      # étape 10
@@ -204,11 +208,12 @@ tracewatch/
 - **Fini quand :** un rapport complet est généré depuis le jeu de démo. ✅ Généré depuis la base réelle (pilote contrôlé, confiance moyenne), contrôle de traçabilité passé, `tests/test_rapport.py` 4/4. Le jeu de démo figé arrive à l'étape 9.
 
 ### Étape 9. Tests, sécurité, reproductibilité
-- [ ] Un test automatisé par scénario (les 5 ci-dessus)
-- [ ] Jeu de démo figé dans `data/demo/`
-- [ ] Vérifier qu'aucun secret n'est dans le dépôt (voir section 7)
-- [ ] README d'installation testé sur une machine propre
-- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README.
+- [x] Un test automatisé par scénario (les 5 ci-dessus), plus rapport, démo et sécurité
+- [x] Jeu de démo figé dans `data/demo/` : 125 documents réels + réponses LLM en cache, reconstruit sans clé ni réseau
+- [x] Vérifier qu'aucun secret n'est dans le dépôt : `tests/test_securite.py` (motifs de clés + vraies valeurs du `.env`)
+- [x] README d'installation testé sur une copie propre (clone, nouvel environnement, installation, démo, tests)
+- [ ] Une personne extérieure à l'équipe suit la section 8 sur son propre ordinateur
+- **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 53/53.
 
 ### Étape 10. Documentation et défense
 - [ ] Note de 2 à 4 pages : méthode de veille, limites, risques
@@ -273,7 +278,8 @@ Puis ouvrir une Pull Request sur GitHub, que A fusionne dans `main`.
 **Contrôle avant le rendu :**
 
 ```bash
-git grep -n -i "api_key\|secret\|token"    # aucune vraie clé ne doit apparaître
+pytest tests/test_securite.py              # automatique : motifs de clés + vraies valeurs du .env
+git grep -n -i "api_key\|secret\|token"    # contrôle à l'œil : aucune vraie clé ne doit apparaître
 git ls-files | grep -i "\.env"             # doit afficher seulement .env.example
 ```
 
@@ -288,19 +294,60 @@ git push origin v1.0
 
 ---
 
-## 8. Installation et lancement (à finaliser à l'étape 9)
+## 8. Installation et lancement
+
+**Prérequis :** Python 3.11 ou plus récent ([python.org](https://www.python.org/downloads/)), Git. Aucune clé n'est nécessaire pour la démo.
+
+### 8.1 Installer (une seule fois)
+
+Windows (PowerShell) :
+
+```powershell
+git clone https://github.com/<utilisateur>/tracewatch.git
+cd tracewatch
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1        # si refusé : Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+pip install -r requirements.txt
+```
+
+macOS / Linux :
 
 ```bash
 git clone https://github.com/<utilisateur>/tracewatch.git
 cd tracewatch
-python -m venv .venv
-source .venv/bin/activate          # Windows : .venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env               # puis renseigner la clé LLM (facultatif en mode démo)
+```
+
+### 8.2 Lancer la démo (sans clé, sans Internet)
+
+```bash
+python -m tracewatch.demo          # reconstruit la base de démo et écrit rapports/demo/dernier_rapport.md
 streamlit run src/tracewatch/app/streamlit_app.py
 ```
 
-Le **mode démo** utilise `data/demo/` et le cache LLM : il fonctionne sans clé.
+Le navigateur s'ouvre sur le tableau de bord : choisir **« Démo (figée) »** dans la barre latérale. Arrêter avec `Ctrl+C`.
+
+### 8.3 Vérifier que tout fonctionne
+
+```bash
+pytest                             # 53 tests : les 5 scénarios, rapport, démo, sécurité
+```
+
+### 8.4 Chaîne complète sur des données fraîches (facultatif, clé Gemini nécessaire)
+
+```bash
+cp .env.example .env               # Windows : copy .env.example .env, puis y coller la clé GEMINI_API_KEY
+python -m tracewatch.collecte      # étape 3 : collecte (Internet requis, ~5 min)
+python -m tracewatch.normalisation # étape 4 : doublons et clusters
+python -m tracewatch.scoring       # étape 5 : trois scores et qualité du corpus
+python -m tracewatch.analyse       # étape 6 : analyse IA (quota gratuit : 20 appels/jour, relançable)
+python -m tracewatch.rapport       # étapes 7-8 : rapport traçable -> rapports/dernier_rapport.md
+python -m tracewatch.demo --exporter   # facultatif : refiger la démo avec ces nouvelles données
+```
+
+Retrouver la source d'une preuve ou d'une conclusion : `python -m tracewatch.rapport.tracabilite P12` (ou `C1`).
 
 ---
 

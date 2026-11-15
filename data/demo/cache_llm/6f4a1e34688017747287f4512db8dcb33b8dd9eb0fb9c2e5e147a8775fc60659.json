@@ -1,0 +1,39 @@
+{
+ "modele": "gemini/gemini-3.5-flash",
+ "date": "2026-11-15T13:27:18+00:00",
+ "prompt": "You are a rigorous analyst working for a technology watch team.\n\nDECISION QUESTION:\nD'ici 12 mois, une entreprise de services numériques peut-elle s'appuyer sur les résultats des benchmarks d'agents LLM (SWE-bench, WebArena, etc.) pour confier des tâches de développement de routine à des agents autonomes, ou ces scores surestiment-ils leur fiabilité réelle, ce qui impose de se limiter à des expérimentations contrôlées ?\n\nSUB-QUESTIONS:\n- SQ1: Que mesurent réellement les benchmarks d'agents, et quelles sont leurs limites (contamination des données, tâches peu réalistes) ?\n- SQ2: Quel écart observe-t-on entre scores publiés, évaluations indépendantes et retours d'expérience réels ?\n- SQ3: Quelles approches d'agents (planification, mémoire, outils, multi-agents) sont réellement matures ?\n- SQ4: Quels échecs et risques sont documentés (fiabilité, injection de prompt, actions destructrices) ?\n- SQ5: Où les affirmations des fournisseurs divergent-elles des sources indépendantes ?\n\nTASK: read the DOCUMENT below and extract at most 5 claims that help answer the decision question.\nIf the document is not useful for the question, return [].\n\nRULES (mandatory):\n1. \"citation\": copy ONE passage VERBATIM from the document: the exact same characters, 1 or 2 consecutive\n   sentences, between 30 and 300 characters. Never paraphrase, never translate, never merge separate passages,\n   never use \"...\". If you cannot quote a passage that supports the claim, do not output the claim.\n2. \"texte\": the claim restated in FRENCH, in one sentence, faithful to the citation, adding nothing.\n3. \"categorie\", one of:\n   - \"fait\": verifiable fact or measured result\n   - \"interpretation\": opinion, analysis or conclusion of the author\n   - \"lacune\": missing evidence, unknown, limitation of what has been measured\n   - \"risque\": documented failure, incident or risk\n   - \"signal\": weak signal or emerging trend\n4. \"theme\", one of:\n   - \"performance_benchmark\": scores and results reported on agent benchmarks (SWE-bench, WebArena...)\n   - \"validite_benchmark\": what benchmarks really measure: contamination, realism, flawed tests, gaming\n   - \"usage_reel\": results in real-world use, production deployments, field feedback, productivity\n   - \"fiabilite_securite\": failures, errors, destructive actions, prompt injection, security and safety\n   - \"maturite_approches\": maturity of agent techniques: planning, memory, tool use, multi-agent\n   - \"supervision_humaine\": need for human review, oversight, controlled pilots, governance\n5. \"position\" with respect to the question:\n   - \"optimiste\": supports that agents / benchmark scores are reliable enough for routine development tasks\n   - \"critique\": suggests scores overestimate real reliability, or documents failures, risks or limits\n   - \"neutre\": neither\n6. \"sous_question\": \"SQ1\" to \"SQ5\", or null.\n\nAnswer with JSON only: a list of objects with keys \"texte\", \"citation\", \"categorie\", \"theme\", \"position\", \"sous_question\".\n\nDOCUMENT\nTitle: MemGuard: Persisting Verifier Signals for LLM-Agent Memory Governance\nSource: arXiv (publication), published 2026-08-22\nText:\n\"\"\"\nLLM agents are moving from single-prompt use to long task streams in which reusable memory becomes a core capability for terminal, software-engineering, and web tasks. Such memory is useful only when stored experience remains reliable across hundreds of interactions, but two failure modes break that assumption in practice. The first is unreliable admission: failed trajectories,accidental successes, and misleading observations enter memory because they appear relevant, then mislead later decisions. The second is memory drift: long-running banks accumulate duplicate, stale, and conflicting records that retrieval alone cannot repair. MemGuard's key distinction is to treat verifier output not as a one-shot filter, but as persistent lifecycle metadata. It converts multi-criteria score-token verification into reward, confidence, label, and uncertainty descriptors that are attached to every candidate before activation and reused during retrieval, conflict resolution, summarization, and archival. We evaluate MemGuard on Terminal-Bench 2.0, SWE-Bench Verified, WebArena, and Mind2Web across four backbones, comparing against four memory baselines plus a verifier-only control under matched runtime budgets. Averaged over five seeds, MemGuard achieves the best success metric and lowest average steps in all 16 backbone-benchmark settings, improving over ReasoningBank, the strongest prior baseline among the memory methods we evaluate, with a largest gain of 7.9 success-rate points on WebArena, 5.6 step-success-rate points on Mind2Web, and 2.4-3.5 points on terminal and software-engineering benchmarks. Code is available at https://github.com/whyyyyy123/MemGuard.\n\"\"\"\n",
+ "reponse": [
+  {
+   "texte": "Les trajectoires échouées, les succès accidentels et les observations trompeuses s'introduisent dans la mémoire des agents et induisent en erreur leurs décisions ultérieures.",
+   "citation": "The first is unreliable admission: failed trajectories,accidental successes, and misleading observations enter memory because they appear relevant, then mislead later decisions.",
+   "categorie": "risque",
+   "theme": "fiabilite_securite",
+   "position": "critique",
+   "sous_question": "SQ4"
+  },
+  {
+   "texte": "L'accumulation d'enregistrements en double, obsolètes et contradictoires dans la mémoire à long terme crée une dérive que la recherche seule ne peut corriger.",
+   "citation": "The second is memory drift: long-running banks accumulate duplicate, stale, and conflicting records that retrieval alone cannot repair.",
+   "categorie": "lacune",
+   "theme": "maturite_approches",
+   "position": "critique",
+   "sous_question": "SQ3"
+  },
+  {
+   "texte": "La mémoire des agents n'est utile que si l'expérience accumulée reste fiable au fil des interactions, une hypothèse démentie en pratique par deux modes de défaillance.",
+   "citation": "Such memory is useful only when stored experience remains reliable across hundreds of interactions, but two failure modes break that assumption in practice.",
+   "categorie": "lacune",
+   "theme": "maturite_approches",
+   "position": "critique",
+   "sous_question": "SQ3"
+  },
+  {
+   "texte": "Les agents LLM évoluent vers de longues séquences de tâches où la mémoire réutilisable devient une capacité clé pour le génie logiciel, le terminal et le web.",
+   "citation": "LLM agents are moving from single-prompt use to long task streams in which reusable memory becomes a core capability for terminal, software-engineering, and web tasks.",
+   "categorie": "signal",
+   "theme": "maturite_approches",
+   "position": "neutre",
+   "sous_question": "SQ3"
+  }
+ ]
+}

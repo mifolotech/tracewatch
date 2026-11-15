@@ -1,0 +1,31 @@
+{
+ "modele": "gemini/gemini-3.5-flash",
+ "date": "2026-11-15T13:28:05+00:00",
+ "prompt": "You are a rigorous analyst working for a technology watch team.\n\nDECISION QUESTION:\nD'ici 12 mois, une entreprise de services numériques peut-elle s'appuyer sur les résultats des benchmarks d'agents LLM (SWE-bench, WebArena, etc.) pour confier des tâches de développement de routine à des agents autonomes, ou ces scores surestiment-ils leur fiabilité réelle, ce qui impose de se limiter à des expérimentations contrôlées ?\n\nSUB-QUESTIONS:\n- SQ1: Que mesurent réellement les benchmarks d'agents, et quelles sont leurs limites (contamination des données, tâches peu réalistes) ?\n- SQ2: Quel écart observe-t-on entre scores publiés, évaluations indépendantes et retours d'expérience réels ?\n- SQ3: Quelles approches d'agents (planification, mémoire, outils, multi-agents) sont réellement matures ?\n- SQ4: Quels échecs et risques sont documentés (fiabilité, injection de prompt, actions destructrices) ?\n- SQ5: Où les affirmations des fournisseurs divergent-elles des sources indépendantes ?\n\nTASK: read the DOCUMENT below and extract at most 5 claims that help answer the decision question.\nIf the document is not useful for the question, return [].\n\nRULES (mandatory):\n1. \"citation\": copy ONE passage VERBATIM from the document: the exact same characters, 1 or 2 consecutive\n   sentences, between 30 and 300 characters. Never paraphrase, never translate, never merge separate passages,\n   never use \"...\". If you cannot quote a passage that supports the claim, do not output the claim.\n2. \"texte\": the claim restated in FRENCH, in one sentence, faithful to the citation, adding nothing.\n3. \"categorie\", one of:\n   - \"fait\": verifiable fact or measured result\n   - \"interpretation\": opinion, analysis or conclusion of the author\n   - \"lacune\": missing evidence, unknown, limitation of what has been measured\n   - \"risque\": documented failure, incident or risk\n   - \"signal\": weak signal or emerging trend\n4. \"theme\", one of:\n   - \"performance_benchmark\": scores and results reported on agent benchmarks (SWE-bench, WebArena...)\n   - \"validite_benchmark\": what benchmarks really measure: contamination, realism, flawed tests, gaming\n   - \"usage_reel\": results in real-world use, production deployments, field feedback, productivity\n   - \"fiabilite_securite\": failures, errors, destructive actions, prompt injection, security and safety\n   - \"maturite_approches\": maturity of agent techniques: planning, memory, tool use, multi-agent\n   - \"supervision_humaine\": need for human review, oversight, controlled pilots, governance\n5. \"position\" with respect to the question:\n   - \"optimiste\": supports that agents / benchmark scores are reliable enough for routine development tasks\n   - \"critique\": suggests scores overestimate real reliability, or documents failures, risks or limits\n   - \"neutre\": neither\n6. \"sous_question\": \"SQ1\" to \"SQ5\", or null.\n\nAnswer with JSON only: a list of objects with keys \"texte\", \"citation\", \"categorie\", \"theme\", \"position\", \"sous_question\".\n\nDOCUMENT\nTitle: Socratic-SWE: Self-Evolving Coding Agents via Trace-Derived Agent Skills\nSource: arXiv (publication), published 2026-06-05\nText:\n\"\"\"\nLLM-driven software engineering agents have become a central testbed for real-world language-model capability, yet their training remains limited by the availability of high-quality SWE tasks. Existing synthetic data methods typically create tasks through fixed mutation or bug-injection procedures, making the resulting distributions largely independent of the agent's own weaknesses and training progress. We introduce Socratic-SWE, a closed-loop self-evolution framework that reuses the agent's historical solving traces as a source of training signal. Rather than treating traces only as evidence for reward computation, Socratic-SWE distills them into structured agent skills that summarize recurring failures and effective repair patterns. These skills then guide the generation of targeted repair tasks in real repositories. Candidate tasks are checked through execution-based validation and scored with a solver-gradient alignment reward, so that the retained tasks are both verifiable and useful for improving the Solver. The updated Solver produces new traces, enabling the task curriculum to adapt over successive rounds. Across SWE-bench Verified, SWE-bench Lite, SWE-bench Pro, and Terminal-Bench 2.0, Socratic-SWE consistently improves over self-evolving baselines under the same compute budget, reaching 50.40% on SWE-bench Verified after three iterations. These results suggest that solving traces can serve as a scalable substrate for self-evolving SWE agents.\n\"\"\"\n",
+ "reponse": [
+  {
+   "texte": "L'entraînement des agents d'ingénierie logicielle fondés sur les LLM reste contraint par la disponibilité de tâches d'ingénierie logicielle de haute qualité.",
+   "citation": "LLM-driven software engineering agents have become a central testbed for real-world language-model capability, yet their training remains limited by the availability of high-quality SWE tasks.",
+   "categorie": "lacune",
+   "theme": "maturite_approches",
+   "position": "critique",
+   "sous_question": "SQ3"
+  },
+  {
+   "texte": "Le cadre Socratic-SWE surpasse les lignes de base auto-évolutives sur plusieurs benchmarks et atteint 50,40 % de réussite sur SWE-bench Verified après trois itérations.",
+   "citation": "Across SWE-bench Verified, SWE-bench Lite, SWE-bench Pro, and Terminal-Bench 2.0, Socratic-SWE consistently improves over self-evolving baselines under the same compute budget, reaching 50.40% on SWE-bench Verified after three iterations.",
+   "categorie": "fait",
+   "theme": "performance_benchmark",
+   "position": "optimiste",
+   "sous_question": "SQ2"
+  },
+  {
+   "texte": "Les résultats suggèrent que les traces de résolution de problèmes peuvent servir de base évolutive pour les agents d'ingénierie logicielle auto-évolutifs.",
+   "citation": "These results suggest that solving traces can serve as a scalable substrate for self-evolving SWE agents.",
+   "categorie": "interpretation",
+   "theme": "maturite_approches",
+   "position": "optimiste",
+   "sous_question": "SQ3"
+  }
+ ]
+}
