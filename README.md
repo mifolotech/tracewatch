@@ -14,15 +14,15 @@ Projet d'examen final, Option A (cours *Veille scientifique et technologique*, L
 |---|---|---|---|
 | 0 | Cadrage de la question de veille | **Fait** | `CADRAGE.md` |
 | 1 | Architecture et stack | **Fait** | `ARCHITECTURE.md` |
-| 2 | Profil de veille + squelette du projet | À faire | `config/profil_veille.yaml`, dépôt Git |
-| 3 | Collecte multi-sources | À faire | `src/tracewatch/collecte/` |
-| 4 | Normalisation et dédoublonnage | À faire | `src/tracewatch/normalisation/` |
-| 5 | Qualification (scores, filtres) | À faire | `src/tracewatch/scoring/` |
-| 6 | Analyse contrôlée par IA | À faire | `src/tracewatch/analyse/` |
-| 7 | Traçabilité | À faire | `src/tracewatch/rapport/tracabilite.py` |
-| 8 | Rapport + tableau de bord | À faire | `src/tracewatch/rapport/`, `app/` |
-| 9 | Tests, sécurité, reproductibilité | À faire | `tests/`, `.env.example`, README final |
-| 10 | Documentation et défense | À faire | `docs/` |
+| 2 | Profil de veille + squelette du projet | **Fait** (GitHub : à la fin) | `config/profil_veille.yaml`, dépôt Git |
+| 3 | Collecte multi-sources | **Fait** | `src/tracewatch/collecte/` |
+| 4 | Normalisation et dédoublonnage | **Fait** (test 1) | `src/tracewatch/normalisation/` |
+| 5 | Qualification (scores, filtres) | **Fait** (tests 2, 4) | `src/tracewatch/scoring/` |
+| 6 | Analyse contrôlée par IA | **Fait** (test 3) ; analyse réelle en cours (quota) | `src/tracewatch/analyse/` |
+| 7 | Traçabilité | **Fait** (test 5) | `src/tracewatch/rapport/tracabilite.py` |
+| 8 | Rapport + tableau de bord | **Fait** | `src/tracewatch/rapport/`, `app/`, `rapports/` |
+| 9 | Tests, sécurité, reproductibilité | **Fait** ; test par une personne extérieure à faire | `tests/`, `data/demo/`, section 8 |
+| 10 | Documentation et défense | **Fait** ; répétition de l'oral à faire | `docs/` |
 
 Décisions déjà prises : nom du projet **TraceWatch**, stack **Python + Streamlit + SQLite**, LLM interchangeable avec cache, hypothèse de départ **« pilote contrôlé »** (le système doit pouvoir la réfuter).
 
@@ -114,9 +114,10 @@ tracewatch/
 │
 ├── rapports/                  # rapports générés par le système
 └── docs/                      # étape 10
-    ├── architecture.md
-    ├── schema_architecture.png
-    └── note_methode.md        # note de 2 à 4 pages
+    ├── architecture.md        # schéma, modules, décisions techniques
+    ├── schema_architecture.svg
+    ├── note_methode.md        # note de 2 à 4 pages
+    └── oral.md                # préparation de la défense
 ```
 
 ---
@@ -217,9 +218,10 @@ tracewatch/
 - **Fini quand :** `pytest` est vert et quelqu'un d'extérieur lance l'application en suivant le README. ✅ `pytest` : 55/55.
 
 ### Étape 10. Documentation et défense
-- [ ] Note de 2 à 4 pages : méthode de veille, limites, risques
-- [ ] Schéma d'architecture
-- [ ] Déclaration des bibliothèques et services IA utilisés, sources citées
+- [x] Note de 2 à 4 pages : méthode de veille, limites, risques → [`docs/note_methode.md`](docs/note_methode.md)
+- [x] Schéma d'architecture → [`docs/architecture.md`](docs/architecture.md), [`docs/schema_architecture.svg`](docs/schema_architecture.svg)
+- [x] Déclaration des bibliothèques et services IA utilisés, sources citées → section 10 ci-dessous
+- [x] Guide de défense : pitch commun, questions par module, script de démo → [`docs/oral.md`](docs/oral.md)
 - [ ] Répétition de l'oral : chaque membre explique son module et répond individuellement
 
 ---
@@ -373,6 +375,34 @@ Retrouver la source d'une preuve ou d'une conclusion : `python -m tracewatch.rap
 
 ## 10. Déclarations
 
-- Bibliothèques : à compléter avec `requirements.txt`.
-- Services IA utilisés : à déclarer (fournisseur et modèle).
-- Toute source externe utilisée doit être citée.
+### Bibliothèques (versions testées)
+
+| Bibliothèque | Version | Usage |
+|---|---|---|
+| streamlit | 1.67 | Tableau de bord (avec altair 6.3 et pandas 3.1 pour les graphiques et tableaux) |
+| requests | 2.34 | Appels aux API de collecte |
+| feedparser | 6.0 | Flux RSS/Atom et API arXiv |
+| scikit-learn | 1.9 | TF-IDF et similarité cosinus (dédoublonnage) |
+| PyYAML | 6.0 | Profil de veille |
+| python-dotenv | 1.2 | Lecture des clés dans `.env` |
+| google-genai | 3.3 | Client Gemini |
+| pytest | 9.2 | Tests automatisés |
+
+### Services IA utilisés
+
+- **Dans le produit :** Google Gemini, modèle `gemini-3.5-flash` (offre gratuite, température 0), pour l'extraction d'affirmations et de citations (étape 6). Chaque affirmation garde en base le modèle qui l'a produite (`claims.modele`), et chaque réponse est conservée dans le cache (`data/cache_llm/`, `data/demo/cache_llm/`).
+- **Pendant le développement :** Claude (Anthropic), via Claude Code, comme assistant de programmation, pour l'écriture du code, des tests et de la documentation, sous la direction de l'équipe. *(À adapter par l'équipe selon les règles de déclaration de l'examen.)*
+
+### Sources de données
+
+| Source | Accès | Famille |
+|---|---|---|
+| arXiv | API publique `export.arxiv.org` | publication |
+| OpenAlex | API publique `api.openalex.org` | publication |
+| GitHub | API publique (dépôts SWE-bench, WebArena, SWE-agent, OpenHands et leurs issues) | dépôt |
+| SWE-bench | Classement officiel `swebench.com` (Verified, Lite) | benchmark |
+| WebArena | Classement public (Google Sheet référencé par le dépôt officiel) | benchmark |
+| OpenAI, GitHub Blog, Google DeepMind | Flux RSS publics | fournisseur |
+| METR, AI as Normal Technology, Simon Willison, Gary Marcus, Interconnects, Ars Technica, The Register | Flux RSS publics | indépendant |
+
+Chaque document cité dans un rapport est référencé avec son URL dans l'annexe « Preuves ». La liste complète des flux est dans `config/profil_veille.yaml`.
