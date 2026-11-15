@@ -1,0 +1,25 @@
+# Bibliothèques du projet TraceWatch
+# Installation : pip install -r requirements.txt
+
+# Interface
+streamlit>=1.35
+
+# Collecte
+requests>=2.31
+feedparser>=6.0
+
+# Dédoublonnage (TF-IDF, similarité cosinus)
+scikit-learn>=1.4
+
+# Configuration
+PyYAML>=6.0
+python-dotenv>=1.0
+
+# LLM (Gemini). Le client reste interchangeable (voir analyse/llm_client.py)
+google-genai>=1.0
+
+# Tests
+pytest>=8.0
+
+# Le projet lui-même, pour que "import tracewatch" marche partout
+-e .

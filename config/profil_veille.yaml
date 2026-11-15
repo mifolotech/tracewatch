@@ -1,0 +1,202 @@
+# =====================================================================
+# PROFIL DE VEILLE TraceWatch (étape 2)
+# Traduction de CADRAGE.md en règles lisibles par le programme.
+# Toute modification doit rester cohérente avec CADRAGE.md.
+# =====================================================================
+
+version: 1
+
+# ---------------------------------------------------------------------
+# 1. Question de décision
+# ---------------------------------------------------------------------
+question: >
+  D'ici 12 mois, une entreprise de services numériques peut-elle s'appuyer
+  sur les résultats des benchmarks d'agents LLM (SWE-bench, WebArena, etc.)
+  pour confier des tâches de développement de routine à des agents autonomes,
+  ou ces scores surestiment-ils leur fiabilité réelle, ce qui impose de se
+  limiter à des expérimentations contrôlées ?
+
+sous_questions:
+  - id: SQ1
+    texte: "Que mesurent réellement les benchmarks d'agents, et quelles sont leurs limites (contamination des données, tâches peu réalistes) ?"
+  - id: SQ2
+    texte: "Quel écart observe-t-on entre scores publiés, évaluations indépendantes et retours d'expérience réels ?"
+  - id: SQ3
+    texte: "Quelles approches d'agents (planification, mémoire, outils, multi-agents) sont réellement matures ?"
+  - id: SQ4
+    texte: "Quels échecs et risques sont documentés (fiabilité, injection de prompt, actions destructrices) ?"
+  - id: SQ5
+    texte: "Où les affirmations des fournisseurs divergent-elles des sources indépendantes ?"
+
+# Les 4 options possibles et l'hypothèse de départ (réfutable)
+options_decision: [generaliser, pilote_controle, differer, exclure]
+hypothese_depart: pilote_controle
+
+# ---------------------------------------------------------------------
+# 2. Horizon temporel
+# ---------------------------------------------------------------------
+horizon:
+  duree_mois: 12
+  annee_min_prioritaire: 2023   # 2023 à aujourd'hui : sources prioritaires
+  annee_min_contexte: 2020      # 2020 à 2022 : contexte (fraîcheur faible)
+  # avant annee_min_contexte : ignoré à la collecte
+
+# ---------------------------------------------------------------------
+# 3. Mots-clés
+# Tous en anglais : la quasi-totalité des sources est en anglais.
+# ---------------------------------------------------------------------
+mots_cles:
+  # Termes centraux : forte contribution à la pertinence
+  principaux:
+    - "SWE-bench"
+    - "SWE-bench Verified"
+    - "WebArena"
+    - "LLM agent"
+    - "autonomous agent"
+    - "coding agent"
+    - "software engineering agent"
+    - "agent benchmark"
+
+  # Termes liés aux sous-questions : contribution moyenne
+  secondaires:
+    - "benchmark contamination"       # SQ1
+    - "data leakage"                  # SQ1
+    - "agent evaluation"              # SQ1, SQ2
+    - "real-world evaluation"         # SQ2
+    - "issue resolution"              # périmètre : tickets
+    - "test generation"               # périmètre : tests
+    - "code review"                   # périmètre : revue
+    - "log analysis"                  # périmètre : logs
+    - "tool use"                      # SQ3
+    - "planning"                      # SQ3
+    - "agent memory"                  # SQ3
+    - "multi-agent"                   # SQ3
+    - "prompt injection"              # SQ4
+    - "agent failure"                 # SQ4
+    - "reliability"                   # SQ4
+    - "agent safety"                  # SQ4
+
+  # Hors périmètre (CADRAGE §2) : un document dominé par ces termes est pénalisé
+  exclure:
+    - "code completion"
+    - "autocomplete"
+    - "chatbot"
+    - "customer service agent"
+    - "consumer assistant"
+
+# ---------------------------------------------------------------------
+# 4. Sources (au moins 4 familles exigées)
+# source_family autorisées (contrat de données) :
+#   publication | benchmark | depot | fournisseur | independant
+# Les URL marquées "a_verifier" sont à tester à l'étape 3.
+# ---------------------------------------------------------------------
+sources:
+  arxiv:
+    source_family: publication
+    categories: ["cs.SE", "cs.AI", "cs.CL", "cs.LG"]
+    requetes:
+      - "SWE-bench"
+      - "WebArena"
+      - "LLM agent software engineering"
+      - "coding agent evaluation"
+      - "agent benchmark contamination"
+    max_resultats_par_requete: 50
+
+  openalex:
+    source_family: publication
+    requetes:
+      - "SWE-bench"
+      - "LLM autonomous agents software engineering"
+      - "LLM agent benchmark reliability"
+    max_resultats_par_requete: 50
+
+  github:
+    source_family: depot
+    depots:
+      - "SWE-bench/SWE-bench"
+      - "web-arena-x/webarena"
+      - "SWE-agent/SWE-agent"
+      - "All-Hands-AI/OpenHands"
+    # Issues qui documentent des échecs réels (SQ2, SQ4)
+    recherche_issues:
+      - "agent wrong patch"
+      - "agent deleted files"
+      - "benchmark evaluation bug"
+    max_issues_par_requete: 30
+
+  benchmarks:
+    source_family: benchmark
+    leaderboards:
+      - nom: "SWE-bench"
+        url: "https://www.swebench.com/"
+      - nom: "WebArena"
+        url: "https://webarena.dev/"
+
+  rss:
+    # Chaque flux a sa propre famille : c'est ce qui permet de comparer
+    # fournisseurs et sources indépendantes (SQ5, scénario 3)
+    flux:
+      - nom: "OpenAI News"
+        url: "https://openai.com/news/rss.xml"
+        source_family: fournisseur
+        a_verifier: true
+      - nom: "GitHub Blog"
+        url: "https://github.blog/feed/"
+        source_family: fournisseur
+        a_verifier: true
+      - nom: "Simon Willison"
+        url: "https://simonwillison.net/atom/everything/"
+        source_family: independant
+        a_verifier: true
+
+# ---------------------------------------------------------------------
+# 5. Scoring (étape 5)
+# Les trois scores restent SÉPARÉS (scénario 2) et sont affichés séparément.
+# Les poids ne servent qu'à trier la liste dans le tableau de bord.
+# ---------------------------------------------------------------------
+scoring:
+  poids_tri:
+    pertinence: 0.5
+    fiabilite: 0.3
+    fraicheur: 0.2
+
+  pertinence:
+    poids_mot_principal: 1.0
+    poids_mot_secondaire: 0.5
+    bonus_titre: 2.0            # un mot-clé dans le titre compte double
+    penalite_exclusion: 0.5     # multiplicateur si hors périmètre
+
+  fraicheur:
+    demi_vie_mois: 12           # un document de 12 mois vaut 0.5, de 24 mois 0.25
+
+  # Confiance de base par famille (0 à 1), ajustée ensuite au cas par cas
+  fiabilite_par_famille:
+    independant: 0.9            # évaluations et retours indépendants
+    publication: 0.8            # articles scientifiques
+    benchmark: 0.7              # leaderboards : chiffres, mais auto-déclarés
+    depot: 0.6                  # issues GitHub : réel mais anecdotique
+    fournisseur: 0.4            # blogs fournisseurs : intérêt commercial
+
+# ---------------------------------------------------------------------
+# 6. Dédoublonnage (étape 4)
+# ---------------------------------------------------------------------
+dedoublonnage:
+  seuil_similarite: 0.85        # similarité cosinus TF-IDF au-delà = même travail
+
+# ---------------------------------------------------------------------
+# 7. Niveau de preuve (étape 6)
+# Compté en sources INDÉPENDANTES : un cluster de republications = 1 source.
+# ---------------------------------------------------------------------
+niveau_preuve:
+  fort: 3          # au moins 3 sources indépendantes concordantes
+  moyen: 2
+  faible: 1
+  # 0 = insuffisant : la conclusion n'entre pas dans le rapport
+
+# ---------------------------------------------------------------------
+# 8. Qualité du corpus (scénario 4)
+# ---------------------------------------------------------------------
+qualite_corpus:
+  seuil_pertinence_min: 0.3     # en dessous : document considéré comme du bruit
+  alerte_part_bruit: 0.5        # alerte si plus de 50 % du corpus est du bruit
+  familles_min: 4               # exigence de l'examen

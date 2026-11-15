@@ -1,0 +1,25 @@
+# Secrets : ne JAMAIS envoyer sur GitHub
+.env
+
+# Base de données locale (recréée par : python -m tracewatch.db)
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache LLM de travail (le cache de la démo, lui, est dans data/demo/ et EST versionné)
+data/cache_llm/*
+!data/cache_llm/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Éditeurs et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
