@@ -49,6 +49,7 @@ Une application qui passe d'une **question de veille** à un ensemble de **preuv
 
 ```
 tracewatch/
+├── Guide_TraceWatch_Francais_Facile.pdf  # tout le projet expliqué en français facile
 ├── README.md                  # ce fichier
 ├── CADRAGE.md                 # étape 0 (fait)
 ├── ARCHITECTURE.md            # étape 1 (fait)
