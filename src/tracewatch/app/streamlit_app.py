@@ -37,6 +37,7 @@ SOMBRE = getattr(getattr(st.context, "theme", None), "type", "light") == "dark"
 BLEU = "#3987e5" if SOMBRE else "#2a78d6"
 ROUGE = "#e66767" if SOMBRE else "#e34948"
 GRILLE = "#383835" if SOMBRE else "#e4e3df"
+TEXTE = "#f0efec" if SOMBRE else "#1f1f1d"  # étiquettes de valeurs : lisibles sur le fond du thème
 
 
 def style(chart: alt.Chart) -> alt.Chart:
@@ -131,14 +132,17 @@ with onglets[0]:
             tooltip=["famille", "documents"],
         )
         st.altair_chart(style(base.mark_bar(color=BLEU, cornerRadiusEnd=4, size=18)
-                              + base.mark_text(align="left", dx=4).encode(text="documents:Q")),
+                              + base.mark_text(align="left", dx=4, color=TEXTE).encode(text="documents:Q")),
                         width="stretch")
     with g2:
         st.markdown("**Fraîcheur : documents par année de publication**")
-        annees = pd.DataFrame([{"année": (d_["published_date"] or "inconnue")[:4]} for d_ in tous])
+        # [:4] garde l'année (2024-05-01 -> 2024) ; un document sans date reste « sans date » en entier
+        annees = pd.DataFrame([{"année": d_["published_date"][:4] if d_["published_date"] else "sans date"}
+                               for d_ in tous])
         annees = annees.value_counts().reset_index(name="documents")
         st.altair_chart(style(alt.Chart(annees).mark_bar(color=BLEU, cornerRadiusEnd=4).encode(
-            x=alt.X("année:O", title=None), y=alt.Y("documents:Q", title="Documents"),
+            x=alt.X("année:O", title=None, axis=alt.Axis(labelAngle=0, labelLimit=120)),
+            y=alt.Y("documents:Q", title="Documents"),
             tooltip=["année", "documents"])), width="stretch")
 
     st.markdown("**Niveau de preuve par thème** (sources indépendantes ; un travail republié = 1 source)")
@@ -152,7 +156,7 @@ with onglets[0]:
         ]
     df_themes = pd.DataFrame(lignes)
     st.altair_chart(style(alt.Chart(df_themes).mark_bar(cornerRadiusEnd=4, size=12).encode(
-        y=alt.Y("thème:N", title=None),
+        y=alt.Y("thème:N", title=None, axis=alt.Axis(labelLimit=320)),  # noms de thèmes en entier
         yOffset=alt.YOffset("camp:N", sort=["Optimiste", "Critique"]),
         x=alt.X("sources:Q", title="Sources indépendantes"),
         color=alt.Color("camp:N", scale=alt.Scale(domain=["Optimiste", "Critique"], range=[BLEU, ROUGE]),
