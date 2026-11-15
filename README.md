@@ -334,6 +334,8 @@ streamlit run src/tracewatch/app/streamlit_app.py
 
 Le navigateur s'ouvre sur le tableau de bord : choisir **« Démo (figée) »** dans la barre latérale. Arrêter avec `Ctrl+C`.
 
+Au tout premier lancement, Streamlit demande une adresse e-mail (« Email: ») : c'est facultatif, appuyer simplement sur **Entrée**.
+
 ### 8.3 Vérifier que tout fonctionne
 
 ```bash
