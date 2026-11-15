@@ -91,7 +91,7 @@ L'analyse a porté sur les 63 documents sélectionnés (les plus pertinents de c
 
 ## 6. Validation
 
-Le projet compte 62 tests automatisés, dont un fichier par scénario d'examen :
+Le projet compte 64 tests automatisés, dont un fichier par scénario d'examen :
 1. doublons ;
 2. fraîcheur et pertinence ;
 3. contradiction ;

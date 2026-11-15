@@ -249,8 +249,10 @@ with onglets[3]:
                                           (b, "Critiques", dv.critiques, dv.preuve_critiques)):
             col.markdown(f"**{titre}** : niveau {preuve.niveau} ({preuve.sources_independantes} sources "
                          f"indépendantes, {preuve.sources_fournisseurs} fournisseurs)")
-            for cl in liste:
-                col.markdown(f"- **P{cl['id']}** ({cl['source_family']}) {cl['texte']}  \n"
+            # Scénario 3 : le fournisseur d'abord côté optimiste, les indépendants d'abord côté critique
+            en_tete = ("fournisseur",) if titre == "Optimistes" else ("independant", "publication")
+            for cl in sorted(liste, key=lambda c: c["source_family"] not in en_tete):
+                col.markdown(f"- **P{cl['id']}** ({cl['source_family']}, {cl['source_name']}) {cl['texte']}  \n"
                              f"  [{cl['doc_titre'][:70]}]({cl['doc_url']})")
 
 # ---------------------------------------------------------------------

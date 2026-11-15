@@ -55,7 +55,7 @@ Avant l'oral : `python -m tracewatch.demo`, puis `streamlit run src/tracewatch/a
 | 4. Bruit | Corpus : curseurs à 0, puis Pertinence à 0,3 | L'alerte de bruit disparaît, la qualité passe à BON |
 | 5. Élément contesté | Rapport : cliquer sur un [Pn] ; ou Preuves : choisir une preuve | Citation exacte, lien vers le document, puis vers l'original |
 | 3. Contradiction | Contradictions | Thème « Résultats en usage réel » : fournisseur optimiste contre 9 sources indépendantes critiques |
-| Garde-fou | Terminal : `pytest -q` | 62 tests verts, dont la citation inventée rejetée |
+| Garde-fou | Terminal : `pytest -q` | 64 tests verts, dont la citation inventée rejetée |
 
 ## 4. Questions transversales (tout le monde)
 
