@@ -27,3 +27,25 @@ def test_base_vide_affiche_un_message_clair(base_vide):
     at.sidebar.radio[0].set_value("Base réelle").run()
     assert not at.exception
     assert any("base réelle est vide" in i.value for i in at.info)
+
+
+def test_reconstruire_la_demo_depuis_le_tableau_de_bord():
+    """Bug trouvé sous Windows : la base démo restait verrouillée (connexions jamais fermées)."""
+    at = AppTest.from_file(APP, default_timeout=300).run()
+    at.sidebar.radio[0].set_value("Démo (figée)").run()
+    bouton = next(b for b in at.sidebar.button if b.label == "Reconstruire la démo")
+    bouton.click().run()
+    assert not at.exception, [e.value for e in at.exception]
+    assert at.metric[0].value != "0"
+
+
+def test_les_connexions_se_ferment(tmp_path):
+    import sqlite3
+
+    from tracewatch.db import get_connection, init_db
+    chemin = init_db(tmp_path / "t.db")
+    with get_connection(chemin) as c:
+        c.execute("SELECT 1")
+    with pytest.raises(sqlite3.ProgrammingError):  # connexion fermée
+        c.execute("SELECT 1")
+    chemin.unlink()  # sous Windows, échouait si la connexion restait ouverte

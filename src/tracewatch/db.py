@@ -135,11 +135,29 @@ def get_db_path() -> Path:
     return Path(custom) if custom else DEFAULT_DB_PATH
 
 
+class ConnexionFermante(sqlite3.Connection):
+    """Connexion qui se FERME à la sortie d'un bloc `with`.
+
+    Par défaut, `with sqlite3.connect(...)` valide la transaction mais laisse la
+    connexion ouverte : sous Windows, le fichier reste alors verrouillé (impossible
+    de le supprimer, ex. reconstruire la démo depuis le tableau de bord).
+    """
+
+    def __exit__(self, type_exc, exc, tb):
+        try:
+            return super().__exit__(type_exc, exc, tb)  # commit ou rollback
+        finally:
+            self.close()
+
+
 def get_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
-    """Ouvre une connexion avec les clés étrangères activées et l'accès par nom de colonne."""
+    """Ouvre une connexion avec les clés étrangères activées et l'accès par nom de colonne.
+
+    À utiliser dans un bloc `with` : la connexion est validée puis fermée à la sortie.
+    """
     path = Path(db_path) if db_path else get_db_path()
     path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(path)
+    conn = sqlite3.connect(path, factory=ConnexionFermante)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
