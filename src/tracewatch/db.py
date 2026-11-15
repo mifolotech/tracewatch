@@ -112,6 +112,10 @@ COLONNES_AJOUTEES = {
         "modele": "TEXT",  # quel LLM a proposé l'affirmation
         "date_extraction": "TEXT",
     },
+    "conclusions": {
+        "cle": "TEXT",  # identifiant stable (decision, theme:usage_reel...) pour versionner
+        "date_maj": "TEXT",
+    },
 }
 
 
@@ -121,6 +125,7 @@ def _migrer(conn: sqlite3.Connection) -> None:
         for nom, definition in colonnes.items():
             if nom not in existantes:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {nom} {definition}")
+    conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_conclusions_cle ON conclusions(cle)")
 
 
 def get_db_path() -> Path:

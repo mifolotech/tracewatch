@@ -94,10 +94,11 @@ tracewatch/
 │   │   └── niveau_preuve.py
 │   ├── rapport/               # étapes 7 et 8
 │   │   ├── tracabilite.py     # phrase -> preuve [Pn] -> document -> original
-│   │   ├── generateur.py
+│   │   ├── __main__.py        # python -m tracewatch.rapport
+│   │   ├── generateur.py      # règle de décision + rédaction + contrôle
 │   │   └── revision.py        # nouvelles preuves, historique
 │   └── app/
-│       └── streamlit_app.py   # tableau de bord
+│       └── streamlit_app.py   # tableau de bord (6 onglets)
 │
 ├── tests/                     # étape 9 : un fichier par scénario
 │   ├── test_s1_doublons.py
@@ -195,10 +196,12 @@ tracewatch/
 - **Fini quand :** le test 5 passe et on retrouve la source d'une conclusion en un clic. ✅ 7/7.
 
 ### Étape 8. Rapport + tableau de bord
-- [ ] Rapport généré : question, décision recommandée proportionnée au niveau de preuve, faits, contradictions, incertitudes, risques, points à surveiller
-- [ ] Tableau de bord Streamlit : sources par famille, fraîcheur, niveau de preuve, contradictions
-- [ ] Révision : ajouter de nouvelles preuves, recalculer la conclusion, garder l'historique
-- **Fini quand :** un rapport complet est généré depuis le jeu de démo.
+- [x] Rapport généré : question, décision recommandée proportionnée au niveau de preuve, faits, contradictions, incertitudes, risques, points à surveiller
+- [x] Tableau de bord Streamlit : sources par famille, fraîcheur, niveau de preuve, contradictions (+ corpus filtrable, preuves, rapport, révisions)
+- [x] Révision : ajouter de nouvelles preuves, recalculer la conclusion, garder l'historique
+- Lancer : `python -m tracewatch.rapport` → `rapports/dernier_rapport.md` ; `streamlit run src/tracewatch/app/streamlit_app.py`
+- Règle de décision et plafonnement de la confiance : voir l'en-tête de `rapport/generateur.py`
+- **Fini quand :** un rapport complet est généré depuis le jeu de démo. ✅ Généré depuis la base réelle (pilote contrôlé, confiance moyenne), contrôle de traçabilité passé, `tests/test_rapport.py` 4/4. Le jeu de démo figé arrive à l'étape 9.
 
 ### Étape 9. Tests, sécurité, reproductibilité
 - [ ] Un test automatisé par scénario (les 5 ci-dessus)

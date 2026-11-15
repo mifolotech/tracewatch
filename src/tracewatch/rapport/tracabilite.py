@@ -123,7 +123,7 @@ def tracer_preuve(conn: sqlite3.Connection, claim_id: int | str) -> Preuve | Non
 
 
 def creer_conclusion(conn: sqlite3.Connection, texte: str, claim_ids: list[int], profil: dict,
-                     motif: str = "création") -> int:
+                     motif: str = "création", cle: str | None = None) -> int:
     """Enregistre une conclusion reliée à ses preuves. Refuse toute preuve non vérifiée.
 
     Le niveau de preuve est CALCULÉ (sources indépendantes), jamais saisi à la main.
@@ -139,7 +139,9 @@ def creer_conclusion(conn: sqlite3.Connection, texte: str, claim_ids: list[int],
 
     niveau = evaluer_niveau(conn, claim_ids, profil).niveau
     cid = conn.execute(
-        "INSERT INTO conclusions (texte, niveau_preuve, version) VALUES (?, ?, 1)", (texte, niveau)
+        "INSERT INTO conclusions (texte, niveau_preuve, version, cle, date_maj) "
+        "VALUES (?, ?, 1, ?, datetime('now'))",
+        (texte, niveau, cle),
     ).lastrowid
     conn.executemany("INSERT INTO conclusion_claims (conclusion_id, claim_id) VALUES (?, ?)",
                      [(cid, i) for i in dict.fromkeys(claim_ids)])
