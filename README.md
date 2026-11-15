@@ -79,7 +79,8 @@ tracewatch/
 │   │   ├── schema.py          # format unique de document
 │   │   ├── dedup.py           # doublons (URL, DOI, similarité)
 │   │   └── clusters.py        # travail original vs republications
-│   ├── scoring/               # étape 5
+│   ├── scoring/               # étape 5 : python -m tracewatch.scoring
+│   │   ├── __main__.py        # calcule les scores + qualité complet vs resserré
 │   │   ├── pertinence.py
 │   │   ├── fraicheur.py
 │   │   ├── fiabilite.py
@@ -169,9 +170,10 @@ tracewatch/
 - **Fini quand :** le test 1 passe. ✅ `pytest tests/test_s1_doublons.py` : 9/9. Sur la vraie base : 1 337 documents → 1 288 travaux distincts (48 groupes de doublons, tous vérifiés à la main).
 
 ### Étape 5. Qualification (tests 2 et 4)
-- [ ] Trois scores séparés : pertinence, fraîcheur, fiabilité/type de source
-- [ ] Filtres de resserrement et indicateur de qualité du corpus
-- **Fini quand :** les tests 2 et 4 passent.
+- [x] Trois scores séparés : pertinence (mots-clés distincts, saturation), fraîcheur (demi-vie 12 mois), fiabilité (famille + vérifié/auto-déclaré)
+- [x] Filtres de resserrement et indicateur de qualité du corpus (bruit, familles, indépendance, republications)
+- Lancer : `python -m tracewatch.scoring`
+- **Fini quand :** les tests 2 et 4 passent. ✅ 7/7 et 4/4. Vraie base : 26 % de bruit → 0 % après resserrement (944 travaux, 5 familles).
 
 ### Étape 6. Analyse contrôlée par IA (le cœur, 20 % de la note)
 - [ ] Client LLM interchangeable avec cache

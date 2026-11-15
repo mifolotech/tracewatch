@@ -68,13 +68,21 @@ mots_cles:
     - "code review"                   # périmètre : revue
     - "log analysis"                  # périmètre : logs
     - "tool use"                      # SQ3
-    - "planning"                      # SQ3
     - "agent memory"                  # SQ3
     - "multi-agent"                   # SQ3
     - "prompt injection"              # SQ4
     - "agent failure"                 # SQ4
     - "reliability"                   # SQ4
     - "agent safety"                  # SQ4
+    # Mots seuls trop vagues (0.18 < seuil de bruit 0.3), mais pertinents COMBINÉS :
+    # "agents" + "software engineering" -> 0.33. ("agent" trouve aussi agents, agentic)
+    - "agent"
+    - "software engineering"
+    - "program repair"
+    - "bug fixing"
+    - "contamination"                 # SQ1
+    - "time horizon"                  # SQ2 : durée des tâches réussies (METR)
+    - "benchmark"
 
   # Hors périmètre (CADRAGE §2) : un document dominé par ces termes est pénalisé
   exclure:
@@ -197,6 +205,10 @@ scoring:
     poids_mot_secondaire: 0.5
     bonus_titre: 2.0            # un mot-clé dans le titre compte double
     penalite_exclusion: 0.5     # multiplicateur si hors périmètre
+    # score = 1 - exp(-brut / saturation). Avec 2.5 :
+    #   1 mot principal dans le texte -> 0.33 | dans le titre -> 0.55
+    #   1 mot secondaire seul dans le texte -> 0.18 (sous le seuil de bruit 0.3)
+    saturation: 2.5
 
   fraicheur:
     demi_vie_mois: 12           # un document de 12 mois vaut 0.5, de 24 mois 0.25
@@ -208,6 +220,10 @@ scoring:
     benchmark: 0.7              # leaderboards : chiffres, mais auto-déclarés
     depot: 0.6                  # issues GitHub : réel mais anecdotique
     fournisseur: 0.4            # blogs fournisseurs : intérêt commercial
+
+  ajustements_fiabilite:
+    benchmark_verifie: 0.15       # résultat vérifié par l'équipe du benchmark -> 0.85
+    benchmark_auto_declare: -0.2  # résultat auto-déclaré par celui qui le soumet -> 0.5
 
 # ---------------------------------------------------------------------
 # 6. Dédoublonnage (étape 4)
@@ -240,3 +256,5 @@ qualite_corpus:
   seuil_pertinence_min: 0.3     # en dessous : document considéré comme du bruit
   alerte_part_bruit: 0.5        # alerte si plus de 50 % du corpus est du bruit
   familles_min: 4               # exigence de l'examen
+  part_independante_min: 0.3    # alerte si moins de 30 % de sources indépendantes ou scientifiques
+  ratio_travaux_min: 0.7        # alerte si moins de 70 % de travaux distincts (trop de republications)
