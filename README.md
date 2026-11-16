@@ -26,7 +26,7 @@ Final exam project, Option A (course *Science and Technology Watch*, 3rd-year Ba
 |---|---|---|---|
 | 0 | Framing the watch question | **Done** | `CADRAGE.md` |
 | 1 | Architecture and stack | **Done** | `ARCHITECTURE.md` |
-| 2 | Watch profile + project skeleton | **Done** (GitHub: at the end) | `config/profil_veille.yaml`, Git repository |
+| 2 | Watch profile + project skeleton | **Done** | `config/profil_veille.yaml`, [GitHub repository](https://github.com/mifolotech/tracewatch) |
 | 3 | Multi-source collection | **Done** | `src/tracewatch/collecte/` |
 | 4 | Normalisation and deduplication | **Done** (test 1) | `src/tracewatch/normalisation/` |
 | 5 | Qualification (scores, filters) | **Done** (tests 2, 4) | `src/tracewatch/scoring/` |
@@ -172,7 +172,7 @@ tracewatch/
 
 ### Step 2. Watch profile + project skeleton
 - [x] Create the structure above
-- [ ] Create the GitHub repository and push the project (see section 7)
+- [x] Create the GitHub repository and push the project (see section 7) → [github.com/mifolotech/tracewatch](https://github.com/mifolotech/tracewatch)
 - [x] Write `requirements.txt`, `.gitignore`, `.env.example`, `pyproject.toml`
 - [x] Write `config/profil_veille.yaml`: question, keywords, horizon, source families, scoring weights
 - [x] Create the SQLite schema (`db.py`) according to the data contract
@@ -270,7 +270,7 @@ git init
 git add .
 git commit -m "Initial commit: TraceWatch"
 git branch -M main
-git remote add origin https://github.com/<username>/tracewatch.git
+git remote add origin https://github.com/mifolotech/tracewatch.git
 git push -u origin main
 ```
 
@@ -328,7 +328,7 @@ git push origin v1.0
 Windows (PowerShell):
 
 ```powershell
-git clone https://github.com/<username>/tracewatch.git
+git clone https://github.com/mifolotech/tracewatch.git
 cd tracewatch
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1        # if refused: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
@@ -338,7 +338,7 @@ pip install -r requirements.txt
 macOS / Linux:
 
 ```bash
-git clone https://github.com/<username>/tracewatch.git
+git clone https://github.com/mifolotech/tracewatch.git
 cd tracewatch
 python3 -m venv .venv
 source .venv/bin/activate
