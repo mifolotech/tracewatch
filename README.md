@@ -6,6 +6,12 @@ Projet d'examen final, Option A (cours *Veille scientifique et technologique*, L
 
 > **Thème de veille (thème 5) :** une entreprise de services numériques peut-elle, d'ici 12 mois, s'appuyer sur les résultats des benchmarks d'agents LLM (SWE-bench, WebArena, etc.) pour confier des tâches de développement de routine à des agents autonomes, ou ces scores surestiment-ils leur fiabilité réelle ?
 
+**Résultat obtenu :** sur 1 337 documents réels (1 288 travaux distincts, 5 familles de sources) et 144 preuves à citation vérifiée, le système recommande un **pilote contrôlé, avec une confiance forte**.
+
+![Vue d'ensemble du tableau de bord TraceWatch](docs/captures/01_vue_ensemble.png)
+
+*Tableau de bord, onglet « Vue d'ensemble » (base réelle) : décision recommandée, indicateurs du corpus, sources par famille, fraîcheur et niveau de preuve par thème. Les autres onglets sont présentés en [section 8.5](#85-aperçu-du-tableau-de-bord).*
+
 ---
 
 ## 1. Où en est-on ? (état d'avancement)
@@ -57,6 +63,7 @@ tracewatch/
 ├── pyproject.toml             # rend "import tracewatch" possible partout
 ├── .env.example               # modèle de clé, sans secret
 ├── .gitignore                 # ignore .env, base, cache
+├── .gitattributes             # fins de ligne identiques pour toute l'équipe
 │
 ├── config/
 │   └── profil_veille.yaml     # étape 2 : question, mots-clés, sources, poids
@@ -114,11 +121,14 @@ tracewatch/
 │   └── test_app.py            # tableau de bord, y compris base vide
 │
 ├── rapports/                  # rapports générés par le système
+│   ├── dernier_rapport.md     # rapport sur la base réelle
+│   └── demo/                  # rapport sur le jeu de démo
 └── docs/                      # étape 10
     ├── architecture.md        # schéma, modules, décisions techniques
     ├── schema_architecture.svg
     ├── note_methode.md        # note de 2 à 4 pages
-    └── oral.md                # préparation de la défense
+    ├── oral.md                # préparation de la défense
+    └── captures/              # captures d'écran du tableau de bord (README)
 ```
 
 ---
@@ -208,7 +218,8 @@ tracewatch/
 - [x] Révision : ajouter de nouvelles preuves, recalculer la conclusion, garder l'historique
 - Lancer : `python -m tracewatch.rapport` → `rapports/dernier_rapport.md` ; `streamlit run src/tracewatch/app/streamlit_app.py`
 - Règle de décision et plafonnement de la confiance : voir l'en-tête de `rapport/generateur.py`
-- **Fini quand :** un rapport complet est généré depuis le jeu de démo. ✅ Généré depuis la base réelle et la démo (pilote contrôlé, confiance forte), contrôle de traçabilité passé, `tests/test_rapport.py` 4/4. Le jeu de démo figé arrive à l'étape 9.
+- **Révision tracée de la règle de décision :** après l'analyse complète, la première version de la règle a recommandé « exclure » (conclusion `decision`, version 3), car elle testait l'exclusion sans regarder les résultats prometteurs, contrairement à `CADRAGE.md`. La règle a été alignée sur le CADRAGE (versions 4 et 5 : pilote contrôlé). Le changement est conservé dans l'historique de la base réelle (onglet Révisions), expliqué dans [`docs/note_methode.md`](docs/note_methode.md) et fixé par des tests.
+- **Fini quand :** un rapport complet est généré depuis le jeu de démo. ✅ Généré depuis la base réelle et la démo (pilote contrôlé, confiance forte), contrôle de traçabilité passé, `tests/test_rapport.py` 4/4. Le jeu de démo figé est décrit à l'étape 9.
 
 ### Étape 9. Tests, sécurité, reproductibilité
 - [x] Un test automatisé par scénario (les 5 ci-dessus), plus rapport, démo et sécurité
@@ -264,7 +275,8 @@ Avant de créer le dépôt sur GitHub : **crée-le vide**, sans README ni `.giti
 .env
 *.db
 *.sqlite
-data/cache_llm/*      # le cache de la démo, lui, est dans data/demo/
+# le cache de la démo, lui, est dans data/demo/ et reste versionné
+data/cache_llm/*
 __pycache__/
 .venv/
 ```
@@ -356,6 +368,34 @@ python -m tracewatch.demo --exporter   # facultatif : refiger la démo avec ces 
 ```
 
 Retrouver la source d'une preuve ou d'une conclusion : `python -m tracewatch.rapport.tracabilite P12` (ou `C1`).
+
+### 8.5 Aperçu du tableau de bord
+
+Le tableau de bord compte six onglets. La barre latérale permet de passer de la **base réelle** au **jeu de démo figé**. Captures réalisées sur la base réelle, thème sombre.
+
+**Corpus** : resserrer le corpus avec trois filtres indépendants (pertinence, fraîcheur, fiabilité), les familles de sources, un mot-clé et l'option « Un document par travail ». Les indicateurs de bruit, de part de sources indépendantes et de qualité se mettent à jour à chaque filtre (test 4).
+
+![Onglet Corpus](docs/captures/02_corpus.png)
+
+**Preuves** : les affirmations extraites par l'IA, filtrables par statut (vérifiées ou rejetées), catégorie et thème. Le sélecteur « Remonter à la source d'une preuve » affiche la citation exacte et le document original (test 5).
+
+![Onglet Preuves](docs/captures/03_preuves.png)
+
+**Contradictions** : pour chaque thème, les affirmations optimistes et critiques côte à côte, avec leur famille, leur source et le lien vers le document. Les divergences « fournisseur vs indépendant » sont signalées (test 3).
+
+![Onglet Contradictions](docs/captures/04_contradictions.png)
+
+**Rapport** : génération du rapport de veille, contrôlé avant affichage (chaque phrase doit citer une preuve vérifiée), et téléchargement au format Markdown.
+
+![Onglet Rapport](docs/captures/05_rapport.png)
+
+**Révisions** : chaque conclusion (C1 à C7) avec son historique de versions, le motif de chaque changement et les preuves ajoutées ou retirées.
+
+![Onglet Révisions](docs/captures/06_revisions.png)
+
+**Ajouter une preuve** (en bas de l'onglet Révisions) : un nouveau document est enregistré, dédoublonné, noté puis analysé. La régénération du rapport fait passer les conclusions modifiées à la version suivante.
+
+![Formulaire d'ajout d'une preuve](docs/captures/07_ajout_preuve.png)
 
 ---
 
