@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,6 +7,8 @@ name = "tracewatch"
 version = "1.0.0"
 description = "Système de veille à preuves traçables (thème 5 : agents autonomes LLM)"
 requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
 # Les dépendances sont listées dans requirements.txt (source unique).
 
 [tool.setuptools.packages.find]

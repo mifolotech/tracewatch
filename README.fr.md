@@ -1,6 +1,6 @@
 # TraceWatch
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white) ![Streamlit](https://img.shields.io/badge/Streamlit-tableau%20de%20bord-FF4B4B?logo=streamlit&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-base-003B57?logo=sqlite&logoColor=white) ![Gemini](https://img.shields.io/badge/LLM-Gemini-8E75B2?logo=googlegemini&logoColor=white) ![Tests](https://img.shields.io/badge/tests-64%20r%C3%A9ussis-2EA44F?logo=pytest&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white) ![Streamlit](https://img.shields.io/badge/Streamlit-tableau%20de%20bord-FF4B4B?logo=streamlit&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-base-003B57?logo=sqlite&logoColor=white) ![Gemini](https://img.shields.io/badge/LLM-Gemini-8E75B2?logo=googlegemini&logoColor=white) ![Tests](https://img.shields.io/badge/tests-64%20r%C3%A9ussis-2EA44F?logo=pytest&logoColor=white) [![Licence : MIT](https://img.shields.io/badge/Licence-MIT-yellow.svg)](LICENSE)
 
 [English](README.md) | **Français**
 
@@ -62,6 +62,7 @@ tracewatch/
 ├── Guide_TraceWatch_Francais_Facile.pdf  # tout le projet expliqué en français facile
 ├── README.md                  # présentation en anglais (page d'accueil GitHub)
 ├── README.fr.md               # ce fichier (version française)
+├── LICENSE                    # licence MIT
 ├── CADRAGE.md                 # étape 0 (fait)
 ├── ARCHITECTURE.md            # étape 1 (fait)
 ├── requirements.txt
@@ -454,3 +455,9 @@ Le tableau de bord compte six onglets. La barre latérale permet de passer de la
 | METR, AI as Normal Technology, Simon Willison, Gary Marcus, Interconnects, Ars Technica, The Register | Flux RSS publics | indépendant |
 
 Chaque document cité dans un rapport est référencé avec son URL dans l'annexe « Preuves ». La liste complète des flux est dans `config/profil_veille.yaml`.
+
+---
+
+## Licence
+
+TraceWatch est distribué sous [licence MIT](LICENSE). Les documents collectés restent la propriété de leurs auteurs et éditeurs ; le jeu de démo conserve leurs URL pour que chaque source puisse être vérifiée.

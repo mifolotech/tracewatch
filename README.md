@@ -1,6 +1,6 @@
 # TraceWatch
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white) ![Streamlit](https://img.shields.io/badge/Streamlit-dashboard-FF4B4B?logo=streamlit&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-database-003B57?logo=sqlite&logoColor=white) ![Gemini](https://img.shields.io/badge/LLM-Gemini-8E75B2?logo=googlegemini&logoColor=white) ![Tests](https://img.shields.io/badge/tests-64%20passing-2EA44F?logo=pytest&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white) ![Streamlit](https://img.shields.io/badge/Streamlit-dashboard-FF4B4B?logo=streamlit&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-database-003B57?logo=sqlite&logoColor=white) ![Gemini](https://img.shields.io/badge/LLM-Gemini-8E75B2?logo=googlegemini&logoColor=white) ![Tests](https://img.shields.io/badge/tests-64%20passing-2EA44F?logo=pytest&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **English** | [Français](README.fr.md)
 
@@ -64,6 +64,7 @@ tracewatch/
 ├── Guide_TraceWatch_Francais_Facile.pdf  # the whole project explained in plain French
 ├── README.md                  # this file (English, GitHub home page)
 ├── README.fr.md               # French version of this file
+├── LICENSE                    # MIT license
 ├── CADRAGE.md                 # step 0 (done): framing
 ├── ARCHITECTURE.md            # step 1 (done)
 ├── requirements.txt
@@ -456,3 +457,9 @@ The dashboard has six tabs (interface in French). The sidebar switches between t
 | METR, AI as Normal Technology, Simon Willison, Gary Marcus, Interconnects, Ars Technica, The Register | Public RSS feeds | independent (`independant`) |
 
 Every document cited in a report is referenced with its URL in the "Preuves" (Evidence) appendix. The full list of feeds is in `config/profil_veille.yaml`.
+
+---
+
+## License
+
+TraceWatch is released under the [MIT License](LICENSE). The collected documents remain the property of their respective authors and publishers; the demo dataset keeps their URLs so every source can be checked.
