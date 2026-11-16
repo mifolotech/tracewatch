@@ -144,7 +144,7 @@ tracewatch/
 | Dédoublonnage | `scikit-learn` (TF-IDF, similarité cosinus) |
 | Configuration | `PyYAML`, `python-dotenv` |
 | Tests | `pytest` |
-| LLM | Interchangeable (Gemini, Groq, Anthropic ou local), clé dans `.env` |
+| LLM | Gemini (seul fournisseur branché ; client interchangeable, voir `analyse/llm_client.py`), clé dans `.env` |
 
 **Règle absolue :** aucune clé API dans le code ni dans les livrables. Les clés vont dans `.env`, qui n'est jamais envoyé sur GitHub.
 

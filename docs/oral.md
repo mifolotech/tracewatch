@@ -29,7 +29,7 @@ Chaque membre doit savoir faire deux choses : (1) présenter le schéma global e
 
 ### C : normalisation, scoring, tests (étapes 4, 5, 9)
 - **À savoir expliquer :** les 6 règles de doublon, chacune avec sa raison ; le fait qu'un cluster vaut une source ; pourquoi les classements sont exclus de la similarité (même gabarit de texte, 10 fausses paires mesurées) ; les 3 scores jamais fusionnés ; les alertes de qualité.
-- **Chiffres :** 48 groupes de doublons ; bruit 26 % → 0 % après resserrement ; 62 tests.
+- **Chiffres :** 48 groupes de doublons ; bruit 26 % → 0 % après resserrement ; 64 tests.
 - **Questions probables :**
   - *« Pourquoi TF-IDF et pas des embeddings ? »* C'est explicable, rapide, et suffisant ici : on a relu tous les groupes, sans faux doublon trouvé.
   - *« Pourquoi une demi-vie de 12 mois ? »* C'est l'horizon de la question. C'est un choix conventionnel, réglable dans le profil.
@@ -40,7 +40,7 @@ Chaque membre doit savoir faire deux choses : (1) présenter le schéma global e
 - **Questions probables :**
   - *« Pourquoi le rapport n'est-il pas rédigé par le LLM ? »* Un texte libre réintroduirait des phrases non vérifiées. Le code assemble uniquement des preuves vérifiées.
   - *« La règle de décision n'est-elle pas arbitraire ? »* Ses seuils sont conventionnels, mais elle est explicite, publique et proportionnée au niveau de preuve. Un LLM qui « recommande » serait arbitraire **et** opaque.
-  - *« Montrez une révision. »* Onglet Révisions, conclusion `decision` : version 2, confiance plafonnée (usage réel non documenté) ; version 3, « exclure » après l'analyse complète ; version 4, retour à « pilote » une fois la règle alignée sur le CADRAGE. Chaque version garde son motif et les preuves ajoutées ou retirées.
+  - *« Montrez une révision. »* Barre latérale : choisir **Base réelle** (la démo, reconstruite d'un seul coup, n'a qu'une version). Onglet Révisions, conclusion C1 `decision` : version 1, pilote contrôlé ; version 2, confiance plafonnée (usage réel non documenté) ; version 3, « exclure » après l'analyse complète ; version 4, retour à « pilote » une fois la règle alignée sur le CADRAGE ; version 5, justification complète du pilote (confiance forte). Chaque version garde son motif et les preuves ajoutées ou retirées.
   - *« Vous avez changé la règle parce que le résultat ne vous plaisait pas ? »* La règle testait « exclure » sans regarder les 11 sources optimistes, contrairement à la définition du CADRAGE. Nous l'avons corrigée, et le changement est tracé, testé et discuté dans la note. La version « exclure » reste consultable.
 
 ## 3. Script de démonstration (environ 6 minutes, mode Démo)
@@ -49,13 +49,14 @@ Avant l'oral : `python -m tracewatch.demo`, puis `streamlit run src/tracewatch/a
 
 | Scénario | Où | Ce qu'on montre |
 |---|---|---|
-| Vue d'ensemble | Vue d'ensemble | Décision, confiance plafonnée et pourquoi, sources par famille, niveau de preuve par thème |
+| Vue d'ensemble | Vue d'ensemble | Décision (pilote contrôlé, confiance forte), sources par famille, fraîcheur, niveau de preuve par thème |
 | 1. Doublons | Corpus, interrupteur « Un document par travail » | Le nombre de documents baisse, celui des travaux distincts ne change pas |
 | 2. Ancien mais pertinent | Corpus, curseur Pertinence à 0,5 | Des documents de 2023 restent : la fraîcheur n'est filtrée que si on le demande |
 | 4. Bruit | Corpus : curseurs à 0, puis Pertinence à 0,3 | L'alerte de bruit disparaît, la qualité passe à BON |
 | 5. Élément contesté | Rapport : cliquer sur un [Pn] ; ou Preuves : choisir une preuve | Citation exacte, lien vers le document, puis vers l'original |
 | 3. Contradiction | Contradictions | Thème « Résultats en usage réel » : fournisseur optimiste contre 9 sources indépendantes critiques |
 | Garde-fou | Terminal : `pytest -q` | 64 tests verts, dont la citation inventée rejetée |
+| Révision | Barre latérale : **Base réelle**, puis Révisions, C1 | Les 5 versions de la décision, dont la version 3 « exclure » (voir la question « Montrez une révision ») |
 
 ## 4. Questions transversales (tout le monde)
 

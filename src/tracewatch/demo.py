@@ -22,6 +22,7 @@ import shutil
 import sqlite3
 import sys
 from datetime import date
+from pathlib import Path
 
 from tracewatch.analyse.extraction import BilanExtraction, analyser_document, construire_prompt
 from tracewatch.analyse.llm_client import CACHE_DEFAUT, ClientLLM
@@ -116,8 +117,11 @@ def exporter(conn: sqlite3.Connection, profil: dict) -> dict:
     return manifeste
 
 
-def construire(profil: dict, chemin_base=BASE_DEMO, dossier_rapports=RAPPORTS_DEMO) -> ResultatRapport:
+def construire(profil: dict, chemin_base=None, dossier_rapports=None) -> ResultatRapport:
     """Reconstruit la démo de zéro : base -> doublons -> scores -> analyse (cache) -> rapport."""
+    # Emplacements lus à l'appel (et non figés à l'import) : les tests peuvent les rediriger
+    chemin_base = Path(chemin_base) if chemin_base else BASE_DEMO
+    dossier_rapports = dossier_rapports or RAPPORTS_DEMO
     manifeste = json.loads(MANIFESTE.read_text(encoding="utf-8"))
     documents = json.loads(DOCUMENTS.read_text(encoding="utf-8"))
     for suffixe in ("", "-journal", "-wal", "-shm"):

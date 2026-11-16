@@ -32,7 +32,7 @@ def main(argv: list[str] | None = None) -> int:
     d = r.synthese.decision
     print(f"✓ Rapport écrit : {r.chemin}")
     print(f"  Décision recommandée : {LIBELLES_OPTIONS[d.option]} (confiance {d.confiance})")
-    print(f"  Traçabilité : chaque phrase porte une preuve vérifiée (contrôle passé)")
+    print("  Traçabilité : chaque phrase porte une preuve vérifiée (contrôle passé)")
     print("  Révisions : " + ("; ".join(r.changements) if r.changements else "aucune conclusion n'a changé"))
     return 0
 

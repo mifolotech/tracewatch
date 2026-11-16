@@ -15,7 +15,7 @@ TraceWatch transforme une **question de veille** en **preuves traçables**, puis
 | Dédoublonnage | `scikit-learn` (TF-IDF, similarité cosinus) | Simple, explicable à l'oral, sans modèle lourd |
 | Configuration | `PyYAML` + `python-dotenv` | Profil de veille en YAML, clés dans `.env` |
 | Tests | `pytest` | Un test par scénario de l'examen |
-| LLM | **Interchangeable** (Gemini, Groq, Anthropic, local) | Clé dans `.env`, jamais dans le code |
+| LLM | **Gemini**, client interchangeable (Groq, Anthropic ou un modèle local s'ajoutent en une classe) | Clé dans `.env`, jamais dans le code |
 
 **Règles de sécurité :** `.env` ignoré par Git, `.env.example` sans secret, aucune clé dans le code ni dans les livrables.
 
@@ -74,7 +74,7 @@ Profil de veille (YAML)
 - `clusters` : `cluster_id`, `document_original_id`, `taille`
 - `scores` : `document_id`, `pertinence`, `fraicheur`, `fiabilite`
 - `claims` : `id`, `document_id`, `texte`, `citation`, `citation_verifiee`, `categorie`, et depuis l'étape 6 : `theme`, `position` (optimiste / critique / neutre), `sous_question`, `modele`, `date_extraction`
-- `conclusions` : `id`, `texte`, `niveau_preuve`, `version`
+- `conclusions` : `id`, `texte`, `niveau_preuve`, `version`, et depuis l'étape 8 : `cle` (identifiant stable, ex. `decision`, `theme:usage_reel`), `date_maj`
 - `conclusion_claims` : lien entre conclusion et affirmations
 - `revisions` : historique des conclusions
 

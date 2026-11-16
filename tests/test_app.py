@@ -10,6 +10,14 @@ AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
 APP = str(Path(__file__).parents[1] / "src" / "tracewatch" / "app" / "streamlit_app.py")
 
 
+@pytest.fixture(autouse=True)
+def demo_temporaire(tmp_path, monkeypatch):
+    """La démo construite par les tests va dans un dossier temporaire : le projet n'est jamais modifié."""
+    from tracewatch import demo
+    monkeypatch.setattr(demo, "BASE_DEMO", tmp_path / "demo" / "tracewatch_demo.db")
+    monkeypatch.setattr(demo, "RAPPORTS_DEMO", tmp_path / "demo" / "rapports")
+
+
 @pytest.fixture
 def base_vide(tmp_path, monkeypatch):
     monkeypatch.setenv("TRACEWATCH_DB", str(tmp_path / "vide.db"))
