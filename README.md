@@ -6,7 +6,7 @@
 
 **A science and technology watch system: from a watch question to traceable evidence, then to a recommendation proportionate to the level of evidence.**
 
-Final exam project, Option A (course *Science and Technology Watch*, 3rd-year Bachelor in Software Engineering & Networks). Team of 4 students.
+Final exam project, Option A (course *Science and Technology Watch*, 3rd-year Bachelor in Software Engineering & Networks). Team of 4 students: **Yéo Mifolo** (lead), **N'dori Joseph**, **Yao Meland** and **Yapi Elisée**.
 
 > **Watch topic (topic 5):** within 12 months, can a digital services company rely on LLM agent benchmark results (SWE-bench, WebArena, etc.) to hand routine development tasks to autonomous agents, or do these scores overestimate their real-world reliability?
 
@@ -250,21 +250,21 @@ tracewatch/
 
 | Step | Owner | Support |
 |---|---|---|
-| 0, 1, 2 | A (lead) | Whole team |
-| 3 Collection | B | D |
-| 4 Deduplication, 5 Scoring | C | B, A |
-| 6 AI analysis | A | C |
-| 7 Traceability, 8 Report and dashboard | D | A |
-| 9 Tests and security | C (tests), B (README, `.env`) | Everyone |
-| 10 Documentation | D (note), A (architecture) | Everyone rehearses the oral |
+| 0, 1, 2 | Yéo Mifolo (lead) | Whole team |
+| 3 Collection | N'dori Joseph | Yapi Elisée |
+| 4 Deduplication, 5 Scoring | Yao Meland | N'dori Joseph, Yéo Mifolo |
+| 6 AI analysis | Yéo Mifolo | Yao Meland |
+| 7 Traceability, 8 Report and dashboard | Yapi Elisée | Yéo Mifolo |
+| 9 Tests and security | Yao Meland (tests), N'dori Joseph (README, `.env`) | Everyone |
+| 10 Documentation | Yapi Elisée (note), Yéo Mifolo (architecture) | Everyone rehearses the oral |
 
-Rules: one Git branch per person, A merges, nobody changes someone else's module without telling them. Everyone must be able to explain the overall diagram in 2 minutes.
+Rules: one Git branch per person, Yéo Mifolo merges, nobody changes someone else's module without telling them. Everyone must be able to explain the overall diagram in 2 minutes.
 
 ---
 
 ## 7. Deploying to GitHub
 
-**Once (A):**
+**Once (Yéo Mifolo):**
 
 ```bash
 git init
@@ -297,7 +297,7 @@ git add . && git commit -m "clear message"
 git push -u origin firstname-module
 ```
 
-Then open a Pull Request on GitHub, which A merges into `main`.
+Then open a Pull Request on GitHub, which Yéo Mifolo merges into `main`.
 
 **Check before submission:**
 

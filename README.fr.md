@@ -6,7 +6,7 @@
 
 **Système de veille scientifique et technologique : de la question de veille aux preuves traçables, puis à une recommandation proportionnée au niveau de preuve.**
 
-Projet d'examen final, Option A (cours *Veille scientifique et technologique*, L3 Génie logiciel & Réseaux). Équipe de 4 étudiants.
+Projet d'examen final, Option A (cours *Veille scientifique et technologique*, L3 Génie logiciel & Réseaux). Équipe de 4 étudiants : **Yéo Mifolo** (chef d'équipe), **N'dori Joseph**, **Yao Meland** et **Yapi Elisée**.
 
 > **Thème de veille (thème 5) :** une entreprise de services numériques peut-elle, d'ici 12 mois, s'appuyer sur les résultats des benchmarks d'agents LLM (SWE-bench, WebArena, etc.) pour confier des tâches de développement de routine à des agents autonomes, ou ces scores surestiment-ils leur fiabilité réelle ?
 
@@ -248,21 +248,21 @@ tracewatch/
 
 | Étape | Responsable | Soutien |
 |---|---|---|
-| 0, 1, 2 | A (lead) | Toute l'équipe |
-| 3 Collecte | B | D |
-| 4 Dédoublonnage, 5 Scoring | C | B, A |
-| 6 Analyse IA | A | C |
-| 7 Traçabilité, 8 Rapport et tableau de bord | D | A |
-| 9 Tests et sécurité | C (tests), B (README, `.env`) | Tous |
-| 10 Documentation | D (note), A (architecture) | Tous répètent l'oral |
+| 0, 1, 2 | Yéo Mifolo (lead) | Toute l'équipe |
+| 3 Collecte | N'dori Joseph | Yapi Elisée |
+| 4 Dédoublonnage, 5 Scoring | Yao Meland | N'dori Joseph, Yéo Mifolo |
+| 6 Analyse IA | Yéo Mifolo | Yao Meland |
+| 7 Traçabilité, 8 Rapport et tableau de bord | Yapi Elisée | Yéo Mifolo |
+| 9 Tests et sécurité | Yao Meland (tests), N'dori Joseph (README, `.env`) | Tous |
+| 10 Documentation | Yapi Elisée (note), Yéo Mifolo (architecture) | Tous répètent l'oral |
 
-Règles : une branche Git par personne, A fusionne, personne ne modifie le module d'un autre sans le prévenir. Chacun doit pouvoir expliquer le schéma global en 2 minutes.
+Règles : une branche Git par personne, Yéo Mifolo fusionne, personne ne modifie le module d'un autre sans le prévenir. Chacun doit pouvoir expliquer le schéma global en 2 minutes.
 
 ---
 
 ## 7. Déployer sur GitHub
 
-**Une seule fois (A) :**
+**Une seule fois (Yéo Mifolo) :**
 
 ```bash
 git init
@@ -295,7 +295,7 @@ git add . && git commit -m "message clair"
 git push -u origin prenom-module
 ```
 
-Puis ouvrir une Pull Request sur GitHub, que A fusionne dans `main`.
+Puis ouvrir une Pull Request sur GitHub, que Yéo Mifolo fusionne dans `main`.
 
 **Contrôle avant le rendu :**
 

@@ -12,7 +12,7 @@ Chaque membre doit savoir faire deux choses : (1) présenter le schéma global e
 
 ## 2. Qui défend quoi
 
-### A : cadrage, architecture, analyse IA (étapes 0, 1, 2, 6)
+### Yéo Mifolo : cadrage, architecture, analyse IA (étapes 0, 1, 2, 6)
 - **À savoir expliquer :** le prompt (citation verbatim obligatoire, catégories, thèmes imposés) ; `verification.py` (seules les tolérances typographiques sont acceptées : casse, espaces, guillemets, tirets) ; le cache (empreinte du modèle et du prompt) ; le niveau de preuve (clusters indépendants, fournisseurs comptés à part).
 - **Chiffres :** 146 affirmations proposées, 144 vérifiées ; 2 vrais rejets (« do report » au lieu de « does report », et une phrase inventée), tous deux venant du modèle le plus léger ; 4 faux rejets typographiques corrigés (espace HTML, Markdown).
 - **Questions probables :**
@@ -20,14 +20,14 @@ Chaque membre doit savoir faire deux choses : (1) présenter le schéma global e
   - *« Pourquoi Gemini ? »* Gratuit sans carte bancaire, et le client est interchangeable. On a d'ailleurs dû changer de modèle pendant le projet : `gemini-2.5` est refusé aux nouveaux comptes.
   - *« Pourquoi une température de 0 ? »* Pour avoir des réponses les plus stables possibles. Le cache garantit ensuite la reproductibilité exacte.
 
-### B : collecte (étape 3)
+### N'dori Joseph : collecte (étape 3)
 - **À savoir expliquer :** les 5 familles et leurs API (arXiv : 3 s entre deux appels, c'est leur règle ; OpenAlex ; GitHub sans jeton ; RSS) ; pourquoi les classements sont collectés entrée par entrée (pour savoir si un résultat est vérifié ou auto-déclaré) ; le filtre par mots-clés des flux RSS.
 - **Chiffres :** 173 résultats auto-déclarés, 93 vérifiés, 48 rapportés par des tiers ; 66 % du blog OpenAI est hors sujet.
 - **Questions probables :**
   - *« Pourquoi pas Anthropic ? »* Pas de flux RSS public. On a pris Google DeepMind à la place.
   - *« Que se passe-t-il si une source tombe ? »* Les autres continuent, l'erreur est affichée, et relancer n'ajoute pas de doublon.
 
-### C : normalisation, scoring, tests (étapes 4, 5, 9)
+### Yao Meland : normalisation, scoring, tests (étapes 4, 5, 9)
 - **À savoir expliquer :** les 6 règles de doublon, chacune avec sa raison ; le fait qu'un cluster vaut une source ; pourquoi les classements sont exclus de la similarité (même gabarit de texte, 10 fausses paires mesurées) ; les 3 scores jamais fusionnés ; les alertes de qualité.
 - **Chiffres :** 48 groupes de doublons ; bruit 26 % → 0 % après resserrement ; 64 tests.
 - **Questions probables :**
@@ -35,7 +35,7 @@ Chaque membre doit savoir faire deux choses : (1) présenter le schéma global e
   - *« Pourquoi une demi-vie de 12 mois ? »* C'est l'horizon de la question. C'est un choix conventionnel, réglable dans le profil.
   - *« Comment testez-vous l'IA sans dépendre du modèle ? »* Le test 3 utilise un faux LLM aux réponses connues, qui contient une citation inventée que le code doit rejeter.
 
-### D : traçabilité, rapport, tableau de bord, note (étapes 7, 8, 10)
+### Yapi Elisée : traçabilité, rapport, tableau de bord, note (étapes 7, 8, 10)
 - **À savoir expliquer :** la chaîne phrase → [Pn] → citation → document → document original ; le contrôle phrase par phrase (un rapport non conforme est refusé) ; la règle de décision et le plafonnement de la confiance ; les révisions versionnées.
 - **Questions probables :**
   - *« Pourquoi le rapport n'est-il pas rédigé par le LLM ? »* Un texte libre réintroduirait des phrases non vérifiées. Le code assemble uniquement des preuves vérifiées.

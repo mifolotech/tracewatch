@@ -82,10 +82,10 @@ Profil de veille (YAML)
 
 | Dossier | Responsable | Étape |
 |---|---|---|
-| `collecte/` | B | 3 |
-| `normalisation/`, `scoring/` | C | 4 et 5 |
-| `analyse/` | A | 6 |
-| `rapport/`, `app/` | D | 7 et 8 |
+| `collecte/` | N'dori Joseph | 3 |
+| `normalisation/`, `scoring/` | Yao Meland | 4 et 5 |
+| `analyse/` | Yéo Mifolo | 6 |
+| `rapport/`, `app/` | Yapi Elisée | 7 et 8 |
 
 ## 7. Décisions à valider par l'équipe
 
